@@ -1,35 +1,93 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import SignUpPage from "./pages/SignUpPage";
+import LoginPage from "./pages/LoginPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import Protected from "./components/auth/Protected";
+import MainLayout from "./layouts/MainLayout";
+import AppLayout from "./layouts/AppLayout";
 
-function App() {
-  const [count, setCount] = useState(0)
+//Pages
+import Dashboard from "./pages/Dashboard";
+import Employees from "./pages/Employees";
+import Payroll from "./pages/Payroll";
+import Invoices from "./pages/Invoices";
+import Banking from "./pages/Banking";
+import Inventory from "./pages/Inventory";
+import Settings from "./pages/Settings";
 
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Router>
+      <Routes>
+        {/* Public routes with MainLayout */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        </Route>
 
-export default App
+        {/* Protected routes with AppLayout */}
+        <Route element={<AppLayout />}>
+          <Route
+            path="/dashboard"
+            element={
+              <Protected>
+                <Dashboard />
+              </Protected>
+            }
+          />
+          <Route
+            path="/employees"
+            element={
+              <Protected>
+                <Employees />
+              </Protected>
+            }
+          />
+          <Route
+            path="/payroll"
+            element={
+              <Protected>
+                <Payroll />
+              </Protected>
+            }
+          />
+          <Route
+            path="/inventory"
+            element={
+              <Protected>
+                <Inventory />
+              </Protected>
+            }
+          />
+          <Route
+            path="/invoices"
+            element={
+              <Protected>
+                <Invoices />
+              </Protected>
+            }
+          />
+          <Route
+            path="/banking"
+            element={
+              <Protected>
+                <Banking />
+              </Protected>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <Protected>
+                <Settings />
+              </Protected>
+            }
+          />
+        </Route>
+      </Routes>
+    </Router>
+  );
+}
