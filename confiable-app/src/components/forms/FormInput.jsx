@@ -35,6 +35,7 @@ export default function FormInput({ name, label, placeholder }) {
                     isPassword ? (showPassword ? "text" : "password") : "text"
                   }
                   placeholder={placeholder}
+                  className={'bg-white'}
                 />
                 {isPassword && (
                   <Button

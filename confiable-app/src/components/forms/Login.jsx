@@ -16,7 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import FormInput from "@/src/components/forms/FormInput";
 import FormContainer from "./FormContainer";
-import { accentClassNames } from "@/lib/utils";
+import { accentClassNames, cn } from "@/lib/utils";
 import GoogleOption from "./GoogleOption";
 import { sleep } from "@/lib/utils";
 import { NavLink } from "react-router-dom";
@@ -27,18 +27,18 @@ const loginSchema = z.object({
   userPassword: z
     .string()
     .min(6, { message: "Password must be at least 6 characters" }),
-  remember: z.boolean().optional(), // Add checkbox
+  // remember: z.boolean().optional(), // Add checkbox
 });
 
 export default function LoginForm() {
-  const { accent, accentHover } = accentClassNames;
+  const { accent, accentHover, accentText } = accentClassNames;
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       userEmail: "",
       userPassword: "",
-      remember: false,
+      // remember: false,
     },
   });
 
@@ -50,8 +50,8 @@ export default function LoginForm() {
 
   return (
     <FormContainer
-      title={"Welcome Back"}
-      subtitle={"Please enter your details to sign in"}
+      title={"Sign In To Confiable"}
+      subtitle={""}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -69,7 +69,7 @@ export default function LoginForm() {
           />
 
           <div className="flex justify-between w-full">
-            {/* Remember Me Checkbox */}
+            {/* Remember Me Checkbox
             <FormField
               control={form.control}
               name="remember"
@@ -88,11 +88,11 @@ export default function LoginForm() {
                   </FormLabel>
                 </FormItem>
               )}
-            />
+            /> */}
 
             {/* Forgot password should ideally lead to a page that collects user's email */}
             <NavLink to={"/forgot-password"}>
-              <small className="font-medium">Forgot Password?</small>
+              <small className={cn("font-normal", accentText)}>Forgot Password?</small>
             </NavLink>
           </div>
 
@@ -104,12 +104,12 @@ export default function LoginForm() {
           </Button>
         </form>
       </Form>
-      <GoogleOption
+      {/* <GoogleOption
         buttonText={"Sign In With Google"}
         bottomText={"Don't you have an account?"}
         ctaText={"Sign Up"}
         ctaPath={'/signup'}
-      />
+      /> */}
     </FormContainer>
   );
 }
