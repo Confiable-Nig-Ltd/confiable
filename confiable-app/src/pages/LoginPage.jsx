@@ -10,9 +10,10 @@ export default function LoginPage() {
     //     <LoginForm />
     //   </div>
     // </FormPage>
-    <div className="w-screen h-screen flex bg-[#1659D5]/40">
+    <div className="w-screen h-screen flex bg-[#324c7e]">
+    {/* <div className="w-screen h-screen flex bg-[#1659D5]/40"> */}
       <div className="w-1/2 hidden xl:flex h-full py-8">
-        <div className="rounded-lg w-9/10 max-w-[590px] mx-auto h-full relative">
+        <div className="rounded-lg w-9/10 max-w-[590px] mr-auto ml-6 h-full relative">
           <img src={confiableHero} alt="Confiable Nigeria Ltd" className="h-full rounded-lg w-full" />
           <div className="bg-gray-50/20 backdrop-blur-md rounded-lg absolute bottom-0 right-0 left-0 h-40 flex flex-col justify-center px-8 gap-4">
             <h2 className="text-white text-xl font-semibold">Track your spending and stay in control</h2>
