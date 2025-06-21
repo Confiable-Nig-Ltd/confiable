@@ -134,11 +134,137 @@
 //   );
 // }
 
-import React from 'react'
+import React from "react";
 
 export default function DashboardGrid() {
   return (
-    <div>DashboardGrid</div>
-  )
-}
+    <div className="max-w-[1100px] flex flex-col px-2 justify-center mx-auto">
+      {/* XL Screens */}
+      <div
+        className="xl:grid hidden justify-center grid-cols-1 gap-4 p-4
+  md:grid-cols-2
+  lg:grid-cols-[repeat(3,350px)]
+  lg:grid-rows-[repeat(1,40px)_repeat(5,150px)]
+  lg:auto-rows-[150px]
+  lg:auto-cols-[350px]
+"
+      >
+        <div className="bg-white border p-2 col-span-3 rounded-md">Controls</div>
+        <div className="bg-white border p-2 rounded-md">Cell 1</div>
 
+        <div
+          className="bg-white border p-2 rounded-md 
+        lg:row-span-2"
+        >
+          Cell 2
+        </div>
+
+        <div
+          className="bg-white border p-2 rounded-md 
+        lg:row-span-2"
+        >
+          Cell 3
+        </div>
+        <div className="bg-white border p-2 rounded-md">Cell </div>
+
+        <div className="bg-white border p-2 rounded-md">Cell 5</div>
+
+        <div
+          className="bg-white border p-2 rounded-md 
+    lg:row-span-3 lg:col-span-2"
+        >
+          Cell 6
+        </div>
+
+        <div
+          className="bg-white border p-2 rounded-md 
+    lg:row-span-2"
+        >
+          Cell 7
+        </div>
+      </div>
+
+      {/* MD & LG Screens */}
+      <div
+        className="md:grid hidden xl:hidden justify-center grid-cols-1 gap-2
+  md:grid-cols-[repeat(2,250px)]
+  lg:grid-cols-[repeat(2,350px)]
+  md:grid-rows-[repeat(1,40px)_repeat(12,100px)]
+"
+      >
+        <div className="bg-white border p-2 md:col-span-2 rounded-md">Controls</div>
+        <div className="bg-white border p-2 rounded-md">Cell 1</div>
+
+        <div
+          className="bg-white border p-2 rounded-md"
+        >
+          Cell 2
+        </div>
+
+        <div
+          className="bg-white border p-2 rounded-md"
+        >
+          Cell 3
+        </div>
+        <div
+          className="p-2 rounded-md"
+        >
+          Blank
+        </div>
+        <div className="bg-white border p-2 rounded-md md:row-span-3">Cell 4</div>
+        <div className="bg-white border p-2 rounded-md md:row-span-3">Cell 5</div>
+
+        <div
+          className="bg-white border p-2 rounded-md 
+    md:row-span-3 md:col-span-2"
+        >
+          Cell 6
+        </div>
+
+        <div
+          className="bg-white border p-2 rounded-md 
+    md:row-span-4 md:col-span-2"
+        >
+          Cell 7
+        </div>
+      </div>
+      {/* SM Screens */}
+      <div
+        className="grid md:hidden justify-center grid-cols-1 gap-2
+  grid-rows-[repeat(1,40px)_repeat(16,100px)]
+"
+      >
+        <div className="bg-white border p-2 md:col-span-2 rounded-md">Controls</div>
+        <div className="bg-white border p-2 rounded-md">Cell 1</div>
+
+        <div
+          className="bg-white border p-2 rounded-md"
+        >
+          Cell 2
+        </div>
+
+        <div
+          className="bg-white border p-2 rounded-md"
+        >
+          Cell 3
+        </div>
+        <div className="bg-white border p-2 rounded-md row-span-3">Cell 4</div>
+        <div className="bg-white border p-2 rounded-md row-span-3">Cell 5</div>
+
+        <div
+          className="bg-white border p-2 rounded-md 
+    row-span-3 md:col-span-2"
+        >
+          Cell 6
+        </div>
+
+        <div
+          className="bg-white border p-2 rounded-md 
+    row-span-4 md:col-span-2"
+        >
+          Cell 7
+        </div>
+      </div>
+    </div>
+  );
+}
