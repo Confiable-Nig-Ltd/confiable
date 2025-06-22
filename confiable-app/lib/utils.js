@@ -37,3 +37,53 @@ export function getPageTitle(currentPath) {
     ) || "Page not found"
   );
 }
+
+export function formatAsNaira(amount) {
+  // Check if the amount is a valid number.
+  if (typeof amount !== 'number' || isNaN(amount)) {
+    console.error("Invalid input: Please provide a valid number for the amount.");
+    return "Invalid Amount"; // Or throw an error, depending on desired error handling
+  }
+
+  // Use Intl.NumberFormat for robust currency formatting.
+  // 'en-NG' specifies the locale for Nigeria (English as spoken in Nigeria).
+  // 'currency' style indicates currency formatting.
+  // 'NGN' is the ISO 4217 currency code for Nigerian Naira.
+  try {
+    const formatter = new Intl.NumberFormat('en-NG', {
+      style: 'currency',
+      currency: 'NGN',
+      minimumFractionDigits: 2, // Ensure at least 2 decimal places for kobo
+      maximumFractionDigits: 2  // Ensure at most 2 decimal places
+    });
+    return formatter.format(amount);
+  } catch (error) {
+    console.error("Error formatting currency:", error);
+    return `Error: ${amount}`; // Fallback in case of formatting error
+  }
+}
+
+export function sumByKey(arr, key) {
+  // Ensure the input is an array
+  if (!Array.isArray(arr)) {
+    console.error("Invalid input: First argument must be an array.");
+    return 0; // Return 0 or throw an error based on desired behavior for invalid input
+  }
+
+  // Use the reduce method to iterate over the array and sum the values
+  const sum = arr.reduce((accumulator, currentObject) => {
+    // Check if the current object has the specified key and if its value is a number
+    if (currentObject && typeof currentObject === 'object' && !Array.isArray(currentObject) &&
+        Object.prototype.hasOwnProperty.call(currentObject, key) &&
+        typeof currentObject[key] === 'number') {
+      return accumulator + currentObject[key];
+    } else {
+      // If the key is missing or the value is not a number, skip it
+      // and continue with the current accumulated value.
+      return accumulator;
+    }
+  }, 0); // Initialize the accumulator to 0
+
+  return sum;
+}
+
