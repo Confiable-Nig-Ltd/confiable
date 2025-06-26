@@ -17,7 +17,7 @@ export default function Home() {
       <div className="w-full md:w-1/2 flex flex-col items-center justify-center px-8 py-10 space-y-6">
         {/* Image on top */}
         <div
-          className="w-full h-190 bg-center bg-cover bg-no-repeat rounded-lg"
+          className="w-full h-200 bg-center bg-contain bg-no-repeat rounded-lg"
           style={{
             backgroundImage: "url('/confiable1.png')",
           }}
