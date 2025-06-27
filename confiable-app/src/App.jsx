@@ -91,3 +91,24 @@ export default function App() {
     </Router>
   );
 }
+
+
+
+
+
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import Home from "./pages/Home";
+// import SignUpPage from "./pages/SignUpPage";
+// import LoginPage from "./pages/LoginPage";
+
+// export default function App() {
+//   return (
+//     <Router>
+//       <Routes>
+//         <Route path="/" element={<Home />}></Route>
+//         <Route path="/signup" element={<SignUpPage />}></Route>
+//         <Route path="/login" element={<LoginPage />}></Route>
+//       </Routes>
+//     </Router>
+//   );
+// }
