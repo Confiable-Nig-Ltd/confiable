@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import EmployeeSuccess from "../components/forms/EmployeeSuccess";
+import EmployeeSuccess from "./EmployeeSuccess";
 
 const initialEmployees = [
   {
@@ -261,7 +261,7 @@ export default function EmployeeTable() {
         {/* Modal */}
       {isModalOpen && (
     <div
-      className="fixed inset-0 bg-transparent bg-opacity-40 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-transparent bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center"
       onClick={() => setIsModalOpen(false)}
     >
       <div
