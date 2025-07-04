@@ -1,8 +1,12 @@
 import React from 'react'
+import EmployeeOverview from './EmployeeOverview'
 
 export default function Settings() {
   return (
-    <div>Settings</div>
+    <>
+      <EmployeeOverview />
+      <div>Settings</div>
+    </>
   )
 }
 

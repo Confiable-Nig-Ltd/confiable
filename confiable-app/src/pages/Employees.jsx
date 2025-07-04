@@ -147,7 +147,7 @@ export default function EmployeeTable() {
 
         <div className="p-4 bg-white border rounded-lg mb-6">
         <div className="flex flex-col md:flex-row gap-4 justify-center md:justify-start">
-            <Link href="/signup">
+            <Link href="/employee-overview">
               <button className="px-6 py-2 rounded-xl text-sm hover:bg-blue-600 hover:text-white bg-gray-200">
                 Employee Overview
               </button>
@@ -157,7 +157,7 @@ export default function EmployeeTable() {
                 Employee List
               </button>
             </Link>
-             <Link href="/signup">
+             <Link href="/department">
               <button className="px-6 py-2 rounded-xl text-sm hover:bg-blue-600 hover:text-white bg-gray-200">
                 Department
               </button>
@@ -261,11 +261,11 @@ export default function EmployeeTable() {
         {/* Modal */}
       {isModalOpen && (
     <div
-      className="fixed inset-0 bg-transparent bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center"
+      className="fixed inset-0 bg-transparent bg-opacity-50 mt-4 mb-4 backdrop-blur-sm z-50 flex items-center justify-center"
       onClick={() => setIsModalOpen(false)}
     >
       <div
-        className="bg-white w-1/2 sm:w-1/2 max-w-lg p-6 rounded-xl shadow-2xl relative"
+        className="bg-white w-1/2 sm:w-1/2 max-w-lg p-2 rounded-xl shadow-2xl relative"
         onClick={(e) => e.stopPropagation()}
       >
         <button
