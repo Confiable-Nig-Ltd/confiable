@@ -135,6 +135,9 @@
 // }
 
 import React from "react";
+import { StatCard } from "./StatCard";
+import { TrendingUp, TrendingDown } from "lucide-react";
+import { formatAsNaira } from "@/lib/utils";
 
 export default function DashboardGrid() {
   return (
@@ -150,7 +153,16 @@ export default function DashboardGrid() {
 "
       >
         <div className="bg-white border p-2 col-span-3 rounded-md">Controls</div>
-        <div className="bg-white border p-2 rounded-md">Cell 1</div>
+        {/* <div className="bg-white border p-2 rounded-md">Cell 1</div> */}
+        <div className="bg-white border p-2 rounded-md">
+          <StatCard
+            title="Total Sales"
+            amount={formatAsNaira(500000)}
+            trendText="+5% from last month"
+            icon={<TrendingUp className="text-red-500" />}
+            iconBgColor="bg-red-100"
+          />
+        </div>
 
         <div
           className="bg-white border p-2 rounded-md 
