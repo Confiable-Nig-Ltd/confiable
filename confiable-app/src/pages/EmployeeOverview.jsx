@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { FiUsers, FiCheckCircle, FiUserPlus } from "react-icons/fi";
+import { TrendingUp } from 'lucide-react';
 
 
 
@@ -38,7 +38,7 @@ export default function EmployeeOverview() {
                 Employee Overview
               </button>
             </Link>
-            <Link href="/employees">
+            <Link href="/#">
               <button className="px-6 py-2 rounded-xl text-sm hover:bg-blue-600 hover:text-white bg-gray-200">
                 Employee List
               </button>
@@ -63,7 +63,7 @@ export default function EmployeeOverview() {
         growth="↑ 35% from last month"
         growthColor="text-green-500"
         action="View Employees"
-        icon={FiUsers}
+        icon={TrendingUp}
         iconColor="#16a34a" // green.600
       />
       <Card
@@ -72,7 +72,7 @@ export default function EmployeeOverview() {
         growth="↑ 12% this month"
         growthColor="text-green-500"
         action="View Departments"
-        icon={FiCheckCircle}
+        icon={TrendingUp}
         iconColor="#0ea5e9" // blue.500
       />
       <Card
@@ -81,7 +81,7 @@ export default function EmployeeOverview() {
         growth="↓ 8% from last month"
         growthColor="text-red-500"
         action="Review Applicants"
-        icon={FiUserPlus}
+        icon={TrendingUp}
         iconColor="#dc2626" // red.600
       />
     </div>

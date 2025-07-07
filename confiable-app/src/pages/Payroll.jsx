@@ -1,7 +1,11 @@
 import React from 'react'
+import EmployeeSuccess from './EmployeeSuccess'
 
 export default function Payroll() {
   return (
-    <div>Payroll</div>
+    <>
+      <EmployeeSuccess />
+      <div>Payroll</div>
+    </>
   )
 }
