@@ -31,13 +31,18 @@ const Card = ({ title, count, text, action, icon: Icon, iconColor }) => (
 
 export default function EmployeeOverview() {
   const [activeTab, setActiveTab] = useState("overview");
-  const [currentPage, setCurrentPage] = useState(1);
+  // Separate pagination states
+  const [transactionPage, setTransactionPage] = useState(1);
+  const [productPage, setProductPage] = useState(1);
   const [inventoryPage, setInventoryPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const itemsPerPage = 5;
-  const inventoryItemsPerPage = 5;
+  // Constants for items per page
+  const TRANSACTIONS_PER_PAGE = 2;
+  const PRODUCTS_PER_PAGE = 5;
+  const INVENTORY_PER_PAGE = 5;
 
+  // Data
   const products = [
     {
       name: "Office Chair",
@@ -164,21 +169,91 @@ export default function EmployeeOverview() {
     },
   ];
 
-  const paginatedProducts = products.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-  const paginatedInventory = inventoryData.slice(
-    (inventoryPage - 1) * inventoryItemsPerPage,
-    inventoryPage * inventoryItemsPerPage
+  const transactions = [
+    {
+      id: "ST-001",
+      product: "Office chair",
+      type: "Stock In",
+      quantity: "+25",
+      source: "From: Purchase Order PO-001",
+      destination: "To: Main Warehouse",
+      date: "15/01/2025, 10:30:00 AM",
+      performedBy: "Taiwo Akinkunmi",
+    },
+    {
+      id: "ST-002",
+      product: "Laptop Computer",
+      type: "Stock Out",
+      quantity: "-10",
+      source: "From: Main Warehouse",
+      destination: "To: Sales Order",
+      date: "17/01/2025, 14:21:00 PM",
+      performedBy: "Mercy Johnson",
+    },
+    {
+      id: "ST-003",
+      product: "Printer Paper",
+      type: "Stock In",
+      quantity: "+30",
+      source: "From: Purchase Order PO-001",
+      destination: "To: Main Warehouse",
+      date: "20/01/2025, 8:17:00 AM",
+      performedBy: "Ifeoluwa Thomas",
+    },
+    {
+      id: "ST-004",
+      product: "Desk Lamp",
+      type: "Stock In",
+      quantity: "+40",
+      source: "From: Purchase Order PO-001",
+      destination: "To: Main Warehouse",
+      date: "22/01/2025, 11:00:00 AM",
+      performedBy: "Eze Chisom",
+    },
+    // Add more transactions as needed
+  ];
+
+  // Helper for generating pagination buttons
+  const getPageButtons = (total, current, setPage) =>
+    Array.from({ length: total }, (_, i) => (
+      <button
+        key={i}
+        className={`w-8 h-8 rounded ${
+          current === i + 1 ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-600"
+        }`}
+        onClick={() => setPage(i + 1)}
+      >
+        {i + 1}
+      </button>
+    ));
+
+  // Calculate total pages
+  const totalTransactionPages = Math.ceil(transactions.length / TRANSACTIONS_PER_PAGE);
+  const totalProductPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
+  const totalInventoryPages = Math.ceil(inventoryData.length / INVENTORY_PER_PAGE);
+
+  // Get paginated data
+  const paginatedTransactions = transactions.slice(
+    (transactionPage - 1) * TRANSACTIONS_PER_PAGE,
+    transactionPage * TRANSACTIONS_PER_PAGE
   );
 
-  const productPages = Math.ceil(products.length / itemsPerPage);
-  const inventoryPages = Math.ceil(inventoryData.length / inventoryItemsPerPage);
+  const paginatedProducts = products.slice(
+    (productPage - 1) * PRODUCTS_PER_PAGE,
+    productPage * PRODUCTS_PER_PAGE
+  );
+
+  const paginatedInventory = inventoryData.slice(
+    (inventoryPage - 1) * INVENTORY_PER_PAGE,
+    inventoryPage * INVENTORY_PER_PAGE
+  );
+
+  // Count products below reorder level
   const belowReorderCount = inventoryData.filter(item => item.reorderLevel < 15).length;
 
   return (
     <div className="p-2 sm:p-4">
+      {/* Tabs */}
       <div className="bg-white border rounded-lg p-4 mb-6">
         <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
           {["overview", "products", "inventory", "warehouse"].map((tab) => (
@@ -197,15 +272,117 @@ export default function EmployeeOverview() {
         </div>
       </div>
 
+      {/* Overview Tab */}
       {activeTab === "overview" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <Card title="Stock In Today" count="120" text="items received" action="View Details" icon={TrendingUp} iconColor="#16a34a" />
-          <Card title="Stock Out Today" count="580" text="items dispatched" action="View Details" icon={TrendingUp} iconColor="red" />
-          <Card title="Transfers" count="25" text="warehouse transfers" action="Review Transfers" icon={FiRepeat} iconColor="#3b82f6" />
-          <Card title="Adjustments" count="15" text="stock changes" action="Audit Adjustments" icon={FiSettings} iconColor="#f59e0b" />
-        </div>
+        <>
+          {/* Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <Card
+              title="Stock In Today"
+              count="120"
+              text="items received"
+              action="View Details"
+              icon={TrendingUp}
+              iconColor="#16a34a"
+            />
+            <Card
+              title="Stock Out Today"
+              count="580"
+              text="items dispatched"
+              action="View Details"
+              icon={TrendingUp}
+              iconColor="red"
+            />
+            <Card
+              title="Transfers"
+              count="25"
+              text="warehouse transfers"
+              action="Review Transfers"
+              icon={FiRepeat}
+              iconColor="#3b82f6"
+            />
+            <Card
+              title="Adjustments"
+              count="15"
+              text="stock changes"
+              action="Audit Adjustments"
+              icon={FiSettings}
+              iconColor="#f59e0b"
+            />
+          </div>
+
+          {/* Transaction History */}
+          <div className="p-4 bg-white rounded-xl shadow">
+            <h2 className="text-xl font-semibold mb-4">Transaction History</h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm text-left">
+                <thead className="bg-gray-100 text-gray-600">
+                  <tr>
+                    <th className="py-2 px-3">Transaction ID</th>
+                    <th className="py-2 px-3">Product</th>
+                    <th className="py-2 px-3">Type</th>
+                    <th className="py-2 px-3">Quantity</th>
+                    <th className="py-2 px-3">Source/Destination</th>
+                    <th className="py-2 px-3">Date</th>
+                    <th className="py-2 px-3">Performed by</th>
+                    <th className="py-2 px-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginatedTransactions.map((txn, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="py-2 px-3">{txn.id}</td>
+                      <td className="py-2 px-3">{txn.product}</td>
+                      <td
+                        className={`py-2 px-3 font-medium ${
+                          txn.type === "Stock In" ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
+                        {txn.type}
+                      </td>
+                      <td className="py-2 px-3">{txn.quantity}</td>
+                      <td className="py-2 px-3">
+                        <div>{txn.source}</div>
+                        <div>{txn.destination}</div>
+                      </td>
+                      <td className="py-2 px-3">{txn.date}</td>
+                      <td className="py-2 px-3">{txn.performedBy}</td>
+                      <td className="py-2 px-3 flex gap-2">
+                        <button className="text-blue-500 hover:text-blue-700">
+                          <FiEdit />
+                        </button>
+                        <button className="text-red-500 hover:text-red-700">
+                          <FiTrash2 />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {/* Pagination */}
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                onClick={() => setTransactionPage((p) => Math.max(p - 1, 1))}
+                disabled={transactionPage === 1}
+                className="px-3 py-1 border rounded disabled:opacity-50"
+              >
+                Previous
+              </button>
+              {getPageButtons(totalTransactionPages, transactionPage, setTransactionPage)}
+              <button
+                onClick={() => setTransactionPage((p) => Math.min(p + 1, totalTransactionPages))}
+                disabled={transactionPage === totalTransactionPages}
+                className="px-3 py-1 border rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </>
       )}
 
+      {/* Products Tab */}
       {activeTab === "products" && (
         <section className="bg-white p-6 rounded-xl shadow mb-6">
           <div className="flex items-center justify-between mb-4">
@@ -218,6 +395,7 @@ export default function EmployeeOverview() {
             </button>
           </div>
 
+          {/* Product Table */}
           <div className="overflow-auto bg-white border rounded-lg shadow">
             <table className="w-full text-sm text-left text-gray-600">
               <thead className="bg-gray-100 text-xs uppercase text-gray-500">
@@ -267,20 +445,12 @@ export default function EmployeeOverview() {
             </table>
           </div>
 
+          {/* Pagination for products */}
           <div className="flex justify-end items-center gap-2 mt-4">
-            {Array.from({ length: productPages }).map((_, i) => (
-              <button
-                key={i}
-                className={`w-8 h-8 rounded ${
-                  currentPage === i + 1 ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-600"
-                }`}
-                onClick={() => setCurrentPage(i + 1)}
-              >
-                {i + 1}
-              </button>
-            ))}
+            {getPageButtons(totalProductPages, productPage, setProductPage)}
           </div>
 
+          {/* Modal for adding product */}
           {isModalOpen && (
             <div
               className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm flex justify-center items-center"
@@ -313,6 +483,7 @@ export default function EmployeeOverview() {
         </section>
       )}
 
+      {/* Inventory Tab */}
       {activeTab === "inventory" && (
         <section className="bg-white p-6 rounded-xl shadow mb-6">
           {belowReorderCount > 0 && (
@@ -321,6 +492,7 @@ export default function EmployeeOverview() {
             </div>
           )}
 
+          {/* Inventory Table */}
           <table className="w-full text-sm text-left">
             <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
               <tr>
@@ -346,16 +518,16 @@ export default function EmployeeOverview() {
                   <td className="px-4 py-3">₦{item.price.toLocaleString()}</td>
                   <td className="px-4 py-3">₦{item.costPrice.toLocaleString()}</td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      item.reorderLevel < 15
-                        ? 'bg-red-100 text-red-600'
-                        : 'bg-green-100 text-green-600'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-medium ${
+                        item.reorderLevel < 15 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'
+                      }`}
+                    >
                       {item.reorderLevel}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-green-600 font-semibold text-sm">
-                    {item.status}
+                  <td className="px-4 py-3">
+                    <span className="text-green-600 font-semibold text-sm">{item.status}</span>
                   </td>
                   <td className="px-4 py-3">
                     <button className="text-blue-600 hover:underline mr-2">Edit</button>
@@ -366,22 +538,14 @@ export default function EmployeeOverview() {
             </tbody>
           </table>
 
+          {/* Pagination for inventory */}
           <div className="flex justify-end items-center gap-2 mt-4">
-            {Array.from({ length: inventoryPages }).map((_, i) => (
-              <button
-                key={i}
-                className={`w-8 h-8 rounded ${
-                  inventoryPage === i + 1 ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-600"
-                }`}
-                onClick={() => setInventoryPage(i + 1)}
-              >
-                {i + 1}
-              </button>
-            ))}
+            {getPageButtons(totalInventoryPages, inventoryPage, setInventoryPage)}
           </div>
         </section>
       )}
 
+      {/* Warehouse Tab */}
       {activeTab === "warehouse" && (
         <section className="bg-white p-6 rounded-xl shadow mb-6">
           <h2 className="text-xl font-semibold mb-2">Warehouse</h2>
