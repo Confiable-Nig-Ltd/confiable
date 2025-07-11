@@ -1194,12 +1194,12 @@ export default function EmployeeDashboard() {
           >
             ×
           </button>
-          <h2 className="text-xl font-semibold mt-3">Add New Employee</h2>
+          {/* <h2 className="text-xl font-semibold mt-3">Add New Employee</h2>
           <p className="text-gray-500 mb-4 text-sm">
             {showSuccess
               ? "Employee added successfully"
               : "Enter employee information"}
-          </p>
+          </p> */}
 
           {showSuccess ? (
             <>
@@ -1215,6 +1215,9 @@ export default function EmployeeDashboard() {
             </>
           ) : (
             <form onSubmit={handleAddEmployee} className="space-y-4">
+              <h2 className="text-black font-bold text-md">Add New Employee</h2>
+              <p className="text-gray-500 font-light text-sm mb-8">
+                Enter employee information to create a new record</p>
               {[
                 { label: "Full Name", name: "name", type: "text" },
                 { label: "Role/ Job Title", name: "role", type: "text" },
