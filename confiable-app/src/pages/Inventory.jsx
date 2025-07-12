@@ -452,33 +452,88 @@ export default function EmployeeOverview() {
 
           {/* Modal for adding product */}
           {isModalOpen && (
-            <div
-              className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm flex justify-center items-center"
-              onClick={() => setIsModalOpen(false)}
-            >
-              <div
-                className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <h3 className="text-lg font-bold mb-4">Add New Product</h3>
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <input type="text" placeholder="Name" className="border px-3 py-2 rounded w-full" />
-                  <input type="text" placeholder="Category" className="border px-3 py-2 rounded w-full" />
-                  <input type="text" placeholder="Unit" className="border px-3 py-2 rounded w-full" />
-                  <input type="number" placeholder="Price" className="border px-3 py-2 rounded w-full" />
-                  <input type="number" placeholder="Cost Price" className="border px-3 py-2 rounded w-full" />
-                  <input type="number" placeholder="Re-order Level" className="border px-3 py-2 rounded w-full" />
-                </div>
-                <div className="flex justify-end">
-                  <button
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                    onClick={() => setIsModalOpen(false)}
-                  >
-                    Save
-                  </button>
-                </div>
-              </div>
-            </div>
+           <div
+      className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm flex pt-12 sm:pt-20 justify-center items-start sm:items-center px-2 sm:px-4"
+      onClick={() => setIsModalOpen(false)}
+    >
+      <div
+        className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg mx-auto relative overflow-auto min-h-[400px] sm:min-h-[500px] max-h-[90vh]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close Icon */}
+        <button
+          className="absolute top-2 sm:top-3 right-2 sm:right-3 text-gray-500 hover:text-gray-700 focus:outline-none text-lg sm:text-xl"
+          onClick={() => setIsModalOpen(false)}
+          aria-label="Close modal"
+        >
+          ×
+        </button>
+
+        {/* Modal Header */}
+        <h3 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 flex items-center justify-between">
+          Add New Product
+        </h3>
+        {/* Description */}
+        <p className="text-xs sm:text-sm font-light mb-4 sm:mb-6">
+          Enter product information to create a new record
+        </p>
+
+        {/* Form Fields */}
+        <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
+          <label className="block">
+            <span className="text-xs sm:text-sm">Name</span>
+            <input
+              type="text"
+              className="border px-2 sm:px-3 py-1 sm:py-2 rounded w-full text-sm sm:text-base"
+              placeholder="Enter product name"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs sm:text-sm">Category</span>
+            <input
+              type="text"
+              className="border px-2 sm:px-3 py-1 sm:py-2 rounded w-full text-sm sm:text-base"
+              placeholder="Enter category"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs sm:text-sm">Unit</span>
+            <input
+              type="text"
+              className="border px-2 sm:px-3 py-1 sm:py-2 rounded w-full text-sm sm:text-base"
+              placeholder="Enter unit"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs sm:text-sm">Price</span>
+            <input
+              type="number"
+              className="border px-2 sm:px-3 py-1 sm:py-2 rounded w-full text-sm sm:text-base"
+              placeholder="Enter price"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs sm:text-sm">Cost Price</span>
+            <input
+              type="number"
+              className="border px-2 sm:px-3 py-1 sm:py-2 rounded w-full text-sm sm:text-base"
+              placeholder="Enter cost price"
+            />
+          </label>
+          
+        </div>
+
+        {/* Save Button */}
+        <div className="mt-4 pb-4 sm:pb-6">
+          <button
+            className="bg-blue-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded hover:bg-blue-700 w-full text-sm sm:text-base font-medium"
+            onClick={() => setIsModalOpen(false)}
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
           )}
         </section>
       )}

@@ -770,6 +770,7 @@
 
 import React, { useState } from "react";
 import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiUsers, FiHome, FiGlobe } from 'react-icons/fi';
 import EmployeeSuccess from "./EmployeeSuccess";
 import { TrendingUp } from 'lucide-react';
 
@@ -975,6 +976,10 @@ export default function EmployeeDashboard() {
     },
   ];
 
+  
+ 
+
+
  return (
   <div className="p-4">
     {/* Tab Navigation */}
@@ -1034,6 +1039,8 @@ export default function EmployeeDashboard() {
             iconColor="#dc2626"
           />
         </div>
+      
+      
       </section>
     )}
 
