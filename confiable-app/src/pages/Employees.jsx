@@ -770,9 +770,8 @@
 
 import React, { useState } from "react";
 import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
-import { FiUsers, FiHome, FiGlobe } from 'react-icons/fi';
-import EmployeeSuccess from "./EmployeeSuccess";
 import { TrendingUp } from 'lucide-react';
+import EmployeeSuccess from "./EmployeeSuccess";
 
 const Card = ({ title, count, growth, growthColor, action, icon: Icon, iconColor }) => (
   <div className="bg-white rounded-2xl shadow-md p-3 w-full flex flex-col justify-between">
@@ -794,6 +793,7 @@ const Card = ({ title, count, growth, growthColor, action, icon: Icon, iconColor
 
 const initialEmployees = [
   {
+    id: 1,
     name: "Mbiatke Nkanta",
     phone: "09012222222",
     email: "mbiatke@example.com",
@@ -804,6 +804,7 @@ const initialEmployees = [
     role: "Marketing Manager",
   },
   {
+    id: 2,
     name: "Ada Chioma",
     phone: "08133344455",
     email: "ada@example.com",
@@ -813,55 +814,22 @@ const initialEmployees = [
     status: "Inactive",
     role: "Sales Lead",
   },
+];
+
+const initialDepartments = [
   {
-    name: "Ada Ben",
-    phone: "08133344455",
-    email: "ada@example.com",
-    department: "Sales",
-    joined: "2019-01-20",
-    salary: "100000",
-    status: "Inactive",
-    role: "Sales Lead",
+    name: "Human Resources",
+    employees: 67,
+    location: "Lagos Office",
+    lead: "Adebayo Johnson",
+    role: "Manager",
   },
   {
-    name: "Tana Ofik",
-    phone: "08133344455",
-    email: "tana@example.com",
-    department: "Sales",
-    joined: "2019-01-20",
-    salary: "100000",
-    status: "Inactive",
-    role: "Sales Lead",
-  },
-  {
-    name: "Biola Adeyemi",
-    phone: "08133344455",
-    email: "ada@example.com",
-    department: "Sales",
-    joined: "2019-01-20",
-    salary: "100000",
-    status: "Inactive",
-    role: "Sales Lead",
-  },
-  {
-    name: "Confidence Bassey",
-    phone: "08133344455",
-    email: "confidence@example.com",
-    department: "Sales",
-    joined: "2019-01-20",
-    salary: "100000",
-    status: "Inactive",
-    role: "Sales Lead",
-  },
-  {
-    name: "Seun Adebayo",
-    phone: "08133344455",
-    email: "seun@example.com",
-    department: "Sales",
-    joined: "2019-01-20",
-    salary: "100000",
-    status: "Inactive",
-    role: "Sales Lead",
+    name: "Sales",
+    employees: 42,
+    location: "Abuja Office",
+    lead: "Chioma Umeh",
+    role: "Team Lead",
   },
 ];
 
@@ -871,6 +839,7 @@ export default function EmployeeDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [editingEmployee, setEditingEmployee] = useState(null);
   const rowsPerPage = 5;
 
   const [formData, setFormData] = useState({
@@ -891,7 +860,18 @@ export default function EmployeeDashboard() {
 
   const handleAddEmployee = (e) => {
     e.preventDefault();
-    setEmployees((prev) => [formData, ...prev]);
+    if (editingEmployee) {
+      setEmployees((prev) =>
+        prev.map((emp) =>
+          emp.id === editingEmployee.id ? { ...formData, id: emp.id } : emp
+        )
+      );
+    } else {
+      setEmployees((prev) => [
+        { ...formData, id: prev.length + 1 },
+        ...prev,
+      ]);
+    }
     setFormData({
       name: "",
       phone: "",
@@ -902,13 +882,35 @@ export default function EmployeeDashboard() {
       salary: "",
       status: "Active",
     });
+    setEditingEmployee(null);
     setShowSuccess(true);
     setCurrentPage(1);
+  };
+
+  const handleEditEmployee = (employee) => {
+    setEditingEmployee(employee);
+    setFormData(employee);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteEmployee = (id) => {
+    setEmployees((prev) => prev.filter((emp) => emp.id !== id));
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setShowSuccess(false);
+    setEditingEmployee(null);
+    setFormData({
+      name: "",
+      phone: "",
+      email: "",
+      department: "",
+      role: "",
+      joined: "",
+      salary: "",
+      status: "Active",
+    });
   };
 
   const totalPages = Math.ceil(employees.length / rowsPerPage);
@@ -917,350 +919,375 @@ export default function EmployeeDashboard() {
     currentPage * rowsPerPage
   );
 
-  const departments = [
-    {
-      name: "Human Resources",
-      employees: 67,
-      location: "Lagos Office",
-      lead: "Adebayo Johnson",
-      role: "Manager",
-    },
-    {
-      name: "Sales",
-      employees: 42,
-      location: "Abuja Office",
-      lead: "Chioma Umeh",
-      role: "Team Lead",
-    },
-    {
-      name: "Sales",
-      employees: 42,
-      location: "Abuja Office",
-      lead: "Chioma Umeh",
-      role: "Team Lead",
-    },
-    {
-      name: "Sales",
-      employees: 42,
-      location: "Abuja Office",
-      lead: "Chioma Umeh",
-      role: "Team Lead",
-    },
-    {
-      name: "Sales",
-      employees: 42,
-      location: "Abuja Office",
-      lead: "Chioma Umeh",
-      role: "Team Lead",
-    },
-    {
-      name: "Sales",
-      employees: 42,
-      location: "Abuja Office",
-      lead: "Chioma Umeh",
-      role: "Team Lead",
-    },
-    {
-      name: "Sales",
-      employees: 42,
-      location: "Abuja Office",
-      lead: "Chioma Umeh",
-      role: "Team Lead",
-    },
-    {
-      name: "Sales",
-      employees: 42,
-      location: "Abuja Office",
-      lead: "Chioma Umeh",
-      role: "Team Lead",
-    },
-  ];
-
-  
- 
-
-
- return (
-  <div className="p-4">
-    {/* Tab Navigation */}
-    <section className="bg-white border rounded-lg mb-6 p-4">
-      <p className="text-gray-500 text-sm mb-4">Search anything here...</p>
-      <div className="flex flex-wrap gap-3">
-        {["overview", "list", "department"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setSelectedTab(tab)}
-            className={`px-6 py-2 rounded-xl text-sm capitalize ${
-              selectedTab === tab
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 hover:bg-blue-600 hover:text-white"
-            }`}
-          >
-            {tab === "overview"
-              ? "Employee Overview"
-              : tab === "list"
-              ? "Employee List"
-              : "Department"}
-          </button>
-        ))}
-      </div>
-    </section>
-
-    {/* Overview Section */}
-    {selectedTab === "overview" && (
-      <section className="bg-white border rounded-lg p-4 mb-6">
-        <h2 className="text-lg font-semibold mb-4">Employee Overview</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7">
-          <Card
-            title="Total Employees"
-            count="639"
-            growth="↑ 35% from last month"
-            growthColor="text-green-500"
-            action="View Employees"
-            icon={TrendingUp}
-            iconColor="#16a34a"
-          />
-          <Card
-            title="Number Of Departments"
-            count="580"
-            growth="↑ 12% this month"
-            growthColor="text-green-500"
-            action="View Departments"
-            icon={TrendingUp}
-            iconColor="#0ea5e9"
-          />
-          <Card
-            title="New Employees"
-            count="25"
-            growth="↓ 8% from last month"
-            growthColor="text-red-500"
-            action="Review Applicants"
-            icon={TrendingUp}
-            iconColor="#dc2626"
-          />
+  return (
+    <div className="p-4">
+      {/* Tab Navigation */}
+      <section className="bg-white border rounded-lg mb-6 p-4">
+        <label htmlFor="search" className="sr-only">Search employees</label>
+        <input
+          id="search"
+          type="text"
+          placeholder="Search anything here..."
+          className="w-full mb-4 p-2 border rounded text-sm text-gray-700 placeholder:text-gray-400"
+        />
+        <div className="flex flex-wrap gap-3">
+          {["overview", "list", "department"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setSelectedTab(tab)}
+              className={`px-6 py-2 rounded-xl text-sm capitalize ${
+                selectedTab === tab
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 hover:bg-blue-600 hover:text-white"
+              }`}
+              aria-pressed={selectedTab === tab}
+            >
+              {tab === "overview"
+                ? "Employee Overview"
+                : tab === "list"
+                ? "Employee List"
+                : "Department"}
+            </button>
+          ))}
         </div>
-      
-      
       </section>
-    )}
 
-    {/* Employee List Section */}
-    {selectedTab === "list" && (
-      <section className="bg-white border rounded-lg p-4 mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Employee List</h2>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-indigo-700"
-          >
-            Add New Employee
-          </button>
-        </div>
+      {/* Overview Section */}
+      {selectedTab === "overview" && (
+        <section className="bg-white border rounded-lg p-4 mb-6">
+          <h2 className="text-lg font-semibold mb-4">Employee Overview</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7">
+            <Card
+              title="Total Employees"
+              count="639"
+              growth="↑ 35% from last month"
+              growthColor="text-green-500"
+              action="View Employees"
+              icon={TrendingUp}
+              iconColor="#16a34a"
+            />
+            <Card
+              title="Number Of Departments"
+              count="580"
+              growth="↑ 12% this month"
+              growthColor="text-green-500"
+              action="View Departments"
+              icon={TrendingUp}
+              iconColor="#0ea5e9"
+            />
+            <Card
+              title="New Employees"
+              count="25"
+              growth="↓ 8% from last month"
+              growthColor="text-red-500"
+              action="Review Applicants"
+              icon={TrendingUp}
+              iconColor="#dc2626"
+            />
+          </div>
+        </section>
+      )}
 
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-4 py-2 border">Full Name</th>
-                <th className="px-4 py-2 border">Phone</th>
-                <th className="px-4 py-2 border">Email</th>
-                <th className="px-4 py-2 border">Department</th>
-                <th className="px-4 py-2 border">Role</th>
-                <th className="px-4 py-2 border">Joined</th>
-                <th className="px-4 py-2 border">Salary</th>
-                <th className="px-4 py-2 border">Status</th>
-                <th className="px-4 py-2 border">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentEmployees.map((emp, index) => (
-                <tr key={index} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 border">{emp.name}</td>
-                  <td className="px-4 py-2 border">{emp.phone}</td>
-                  <td className="px-4 py-2 border">{emp.email}</td>
-                  <td className="px-4 py-2 border">{emp.department}</td>
-                  <td className="px-4 py-2 border">{emp.role}</td>
-                  <td className="px-4 py-2 border">{emp.joined}</td>
-                  <td className="px-4 py-2 border">₦{emp.salary}</td>
-                  <td className="px-4 py-2 border">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                        emp.status === "Active"
-                          ? "bg-blue-100 text-blue-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {emp.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2 border">
-                    <div className="flex flex-col space-y-1">
-                      <button className="flex items-center text-blue-600 hover:text-blue-800">
+      {/* Employee List Section */}
+      {selectedTab === "list" && (
+        <section className="bg-white border rounded-lg p-4 mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">Employee List</h2>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-indigo-700"
+              aria-label="Add new employee"
+            >
+              Add New Employee
+            </button>
+          </div>
+
+          {/* Mobile-responsive Employee List */}
+          <div className="overflow-x-auto">
+            {/* Table for larger screens */}
+            <table className="min-w-full text-sm border hidden sm:table" aria-label="Employee list">
+              <thead className="bg-gray-100">
+                <tr>
+                  {[
+                    "Full Name",
+                    "Phone",
+                    "Email",
+                    "Department",
+                    "Role",
+                    "Joined",
+                    "Salary",
+                    "Status",
+                    "Actions",
+                  ].map((header) => (
+                    <th key={header} className="px-4 py-2 border text-left">{header}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {currentEmployees.map((emp) => (
+                  <tr key={emp.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-2 border">{emp.name}</td>
+                    <td className="px-4 py-2 border">{emp.phone}</td>
+                    <td className="px-4 py-2 border">{emp.email}</td>
+                    <td className="px-4 py-2 border">{emp.department}</td>
+                    <td className="px-4 py-2 border">{emp.role}</td>
+                    <td className="px-4 py-2 border">{emp.joined}</td>
+                    <td className="px-4 py-2 border">₦{emp.salary}</td>
+                    <td className="px-4 py-2 border">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                          emp.status === "Active"
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {emp.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 border">
+                      <div className="flex flex-col space-y-1">
+                        <button
+                          onClick={() => handleEditEmployee(emp)}
+                          className="flex items-center text-blue-600 hover:text-blue-800"
+                          aria-label={`Edit ${emp.name}`}
+                        >
+                          <FiEdit className="mr-1" /> Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteEmployee(emp.id)}
+                          className="flex items-center text-red-600 hover:text-red-800"
+                          aria-label={`Delete ${emp.name}`}
+                        >
+                          <FiTrash2 className="mr-1" /> Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Card layout for mobile screens */}
+            <div className="sm:hidden space-y-4">
+              {currentEmployees.map((emp) => (
+                <div key={emp.id} className="bg-white border rounded-lg p-4 shadow-sm">
+                  <div className="space-y-2">
+                    <div>
+                      <span className="font-medium text-gray-700">Full Name:</span>{" "}
+                      {emp.name}
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Phone:</span>{" "}
+                      {emp.phone}
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Email:</span>{" "}
+                      {emp.email}
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Department:</span>{" "}
+                      {emp.department}
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Role:</span>{" "}
+                      {emp.role}
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Joined:</span>{" "}
+                      {emp.joined}
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Salary:</span>{" "}
+                      ₦{emp.salary}
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Status:</span>{" "}
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                          emp.status === "Active"
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {emp.status}
+                      </span>
+                    </div>
+                    <div className="flex space-x-2 pt-2">
+                      <button
+                        onClick={() => handleEditEmployee(emp)}
+                        className="flex items-center text-blue-600 hover:text-blue-800 text-sm"
+                        aria-label={`Edit ${emp.name}`}
+                      >
                         <FiEdit className="mr-1" /> Edit
                       </button>
-                      <button className="flex items-center text-green-600 hover:text-green-800">
-                        <FiPlus className="mr-1" /> Add
-                      </button>
-                      <button className="flex items-center text-red-600 hover:text-red-800">
+                      <button
+                        onClick={() => handleDeleteEmployee(emp.id)}
+                        className="flex items-center text-red-600 hover:text-red-800 text-sm"
+                        aria-label={`Delete ${emp.name}`}
+                      >
                         <FiTrash2 className="mr-1" /> Delete
                       </button>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        <div className="flex justify-center mt-6 space-x-1">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-3 py-1 text-sm rounded border hover:bg-gray-100 disabled:opacity-50"
-          >
-            Prev
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 py-1 text-sm rounded border ${
-                currentPage === i + 1
-                  ? "bg-blue-600 text-white"
-                  : "hover:bg-gray-100"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 text-sm rounded border hover:bg-gray-100 disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
-      </section>
-    )}
-
-    {/* Department Section */}
-    {selectedTab === "department" && (
-      <section className="bg-white border rounded-lg p-4">
-        <h2 className="text-xl font-semibold mb-2">Departments</h2>
-        <p className="mb-4">Manage organisation departments and their details.</p>
-
-        <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4">
-          {departments.map((dept, index) => (
-            <div key={index} className="bg-white shadow rounded-lg p-4 border">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                {dept.name}
-              </h3>
-              <div className="text-sm text-gray-600 mb-1">
-                <span className="font-medium text-gray-700">Employees:</span>{" "}
-                {dept.employees}
-              </div>
-              <div className="text-sm text-gray-600 mb-1">
-                <span className="font-medium text-gray-700">Location:</span>{" "}
-                {dept.location}
-              </div>
-              <div className="text-sm text-gray-600 mb-1">
-                <span className="font-medium text-gray-700">Lead:</span>{" "}
-                {dept.lead}
-              </div>
-              <div className="text-sm text-gray-600 mb-4">
-                <span className="font-medium text-gray-700">Role:</span>{" "}
-                {dept.role}
-              </div>
-              <button className="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700">
-                View Details
-              </button>
-            </div>
-          ))}
-        </div>
-      </section>
-    )}
-
-    {/* Add Employee Modal */}
-    {isModalOpen && (
-      <div
-        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4"
-        onClick={handleCloseModal}
-      >
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="relative bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
-        >
-          <button
-            onClick={handleCloseModal}
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl font-bold"
-          >
-            ×
-          </button>
-          {/* <h2 className="text-xl font-semibold mt-3">Add New Employee</h2>
-          <p className="text-gray-500 mb-4 text-sm">
-            {showSuccess
-              ? "Employee added successfully"
-              : "Enter employee information"}
-          </p> */}
-
-          {showSuccess ? (
-            <>
-              <EmployeeSuccess />
-              <div className="flex justify-center pt-6">
-                <button
-                  onClick={handleCloseModal}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                  Done
-                </button>
-              </div>
-            </>
-          ) : (
-            <form onSubmit={handleAddEmployee} className="space-y-4">
-              <h2 className="text-black font-bold text-md">Add New Employee</h2>
-              <p className="text-gray-500 font-light text-sm mb-8">
-                Enter employee information to create a new record</p>
-              {[
-                { label: "Full Name", name: "name", type: "text" },
-                { label: "Role/ Job Title", name: "role", type: "text" },
-                { label: "Email", name: "email", type: "email" },
-                { label: "Phone Number", name: "phone", type: "tel" },
-                { label: "Department", name: "department", type: "text" },
-                { label: "Date of Employment", name: "joined", type: "date" },
-                { label: "Salary (₦)", name: "salary", type: "number" },
-              ].map(({ label, name, type }) => (
-                <div key={name}>
-                  <label className="block text-sm font-light text-black mb-1">
-                    {label}
-                  </label>
-                  <input
-                    name={name}
-                    type={type}
-                    value={formData[name]}
-                    onChange={handleChange}
-                    required
-                    placeholder={`Enter ${label.toLowerCase()}`}
-                    className="w-full px-3 py-2 border rounded text-sm text-gray-700 placeholder:text-gray-400"
-                  />
+                  </div>
                 </div>
               ))}
-              <div className="flex justify-center pt-4">
-                <button
-                  type="submit"
-                  className="bg-blue-600 w-full text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
-                >
-                  Save
+            </div>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex flex-wrap justify-center mt-6 space-x-1">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1 text-sm rounded border hover:bg-gray-100 disabled:opacity-50"
+              aria-label="Previous page"
+            >
+              Prev
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-3 py-1 text-sm rounded border ${
+                  currentPage === i + 1
+                    ? "bg-blue-600 text-white"
+                    : "hover:bg-gray-100"
+                }`}
+                aria-label={`Page ${i + 1}`}
+                aria-current={currentPage === i + 1 ? "page" : undefined}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 text-sm rounded border hover:bg-gray-100 disabled:opacity-50"
+              aria-label="Next page"
+            >
+              Next
+            </button>
+          </div>
+        </section>
+      )}
+
+      {/* Department Section */}
+      {selectedTab === "department" && (
+        <section className="bg-white border rounded-lg p-4">
+          <h2 className="text-xl font-semibold mb-2">Departments</h2>
+          <p className="mb-4">Manage organisation departments and their details.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {initialDepartments.map((dept, index) => (
+              <div key={index} className="bg-white shadow rounded-lg p-4 border">
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  {dept.name}
+                </h3>
+                <div className="text-sm text-gray-600 mb-1">
+                  <span className="font-medium text-gray-700">Employees:</span>{" "}
+                  {dept.employees}
+                </div>
+                <div className="text-sm text-gray-600 mb-1">
+                  <span className="font-medium text-gray-700">Location:</span>{" "}
+                  {dept.location}
+                </div>
+                <div className="text-sm text-gray-600 mb-1">
+                  <span className="font-medium text-gray-700">Lead:</span>{" "}
+                  {dept.lead}
+                </div>
+                <div className="text-sm text-gray-600 mb-4">
+                  <span className="font-medium text-gray-700">Role:</span>{" "}
+                  {dept.role}
+                </div>
+                <button className="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700">
+                  View Details
                 </button>
               </div>
-            </form>
-          )}
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Add/Edit Employee Modal */}
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4"
+          onClick={handleCloseModal}
+          aria-modal="true"
+          role="dialog"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+          >
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl font-bold"
+              aria-label="Close modal"
+            >
+              ×
+            </button>
+            {showSuccess ? (
+              <>
+                <EmployeeSuccess />
+                <div className="flex justify-center pt-6">
+                  <button
+                    onClick={handleCloseModal}
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  >
+                    Done
+                  </button>
+                </div>
+              </>
+            ) : (
+              <form onSubmit={handleAddEmployee} className="space-y-4">
+                <h2 className="text-black font-bold text-md">
+                  {editingEmployee ? "Edit Employee" : "Add New Employee"}
+                </h2>
+                <p className="text-gray-500 font-light text-sm mb-8">
+                  {editingEmployee
+                    ? "Update employee information"
+                    : "Enter employee information to create a new record"}
+                </p>
+                {[
+                  { label: "Full Name", name: "name", type: "text" },
+                  { label: "Role/ Job Title", name: "role", type: "text" },
+                  { label: "Email", name: "email", type: "email" },
+                  { label: "Phone Number", name: "phone", type: "tel" },
+                  { label: "Department", name: "department", type: "text" },
+                  { label: "Date of Employment", name: "joined", type: "date" },
+                  { label: "Salary (₦)", name: "salary", type: "number" },
+                ].map(({ label, name, type }) => (
+                  <div key={name}>
+                    <label htmlFor={name} className="block text-sm font-light text-black mb-1">
+                      {label}
+                    </label>
+                    <input
+                      id={name}
+                      name={name}
+                      type={type}
+                      value={formData[name]}
+                      onChange={handleChange}
+                      required
+                      placeholder={`Enter ${label.toLowerCase()}`}
+                      className="w-full px-3 py-2 border rounded text-sm text-gray-700 placeholder:text-gray-400"
+                    />
+                  </div>
+                ))}
+                <div className="flex justify-center pt-4">
+                  <button
+                    type="submit"
+                    className="bg-blue-600 w-full text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
+                  >
+                    {editingEmployee ? "Update" : "Save"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
         </div>
-      </div>
-    )}
-  </div>
- )}
+      )}
+    </div>
+  );
+}
