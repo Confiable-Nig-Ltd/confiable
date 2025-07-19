@@ -28,9 +28,9 @@ export function StatisticsCards() {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {cards.map((card, index) => (
-        <Card key={index} className="bg-slate-50">
+        <Card key={index} className="bg-slate-50 gap-0">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">
               {card.title}

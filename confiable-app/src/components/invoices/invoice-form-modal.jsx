@@ -68,14 +68,14 @@ export function InvoiceFormModal() {
           <DialogTitle className="text-lg font-semibold">
             Create New Invoice
           </DialogTitle>
-          <Button
+          {/* <Button
             variant="ghost"
             size="icon"
             onClick={handleClose}
             className="h-6 w-6"
           >
             <X className="h-4 w-4" />
-          </Button>
+          </Button> */}
         </DialogHeader>
 
         <div className="text-sm text-gray-600 mb-4">
