@@ -11,14 +11,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X, CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { format } from "date-fns";
+import { X } from "lucide-react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "../../styles/datepicker.css";
 import { useInvoice } from "@/contexts/invoice-context";
 
 export function InvoiceFormModal() {
@@ -195,26 +191,21 @@ export function InvoiceFormModal() {
 
           <div className="space-y-2">
             <Label>Due Date</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-left font-normal bg-transparent"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : "Choose Date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  initialFocus
-                  className="rounded-md border"
-                />
-              </PopoverContent>
-            </Popover>
+            <div className="relative">
+              <DatePicker
+                selected={date}
+                onChange={(date) => setDate(date)}
+                dateFormat="MMMM d, yyyy"
+                minDate={new Date()}
+                placeholderText="Select due date"
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                wrapperClassName="w-full"
+                calendarClassName="shadow-lg border rounded-md"
+                popperClassName="react-datepicker-popper"
+                showPopperArrow={false}
+                required
+              />
+            </div>
           </div>
 
           <Button
