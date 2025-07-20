@@ -128,11 +128,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
+  // FormField,
+  // FormItem,
+  // FormLabel,
+  // FormControl,
+  // FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import FormInput from "@/src/components/forms/FormInput";
@@ -166,7 +166,7 @@ export default function LoginForm() {
 
       if (result.success) {
         alert(`Logged in as ${result.role}`);
-        navigate(result.role === "owner" ? "/owner-dashboard" : "/admin-dashboard");
+        navigate(result.role === "owner" ? "/dashboard" : "/admin-dashboard");
       } else {
         alert("Login failed: " + result.error);
       }

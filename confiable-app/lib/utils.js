@@ -87,3 +87,58 @@ export function sumByKey(arr, key) {
   return sum;
 }
 
+export function sumByKeyInDateRange(arr, key, startDate, endDate) {
+  if (!Array.isArray(arr)) {
+    console.error("Invalid input: First argument must be an array.");
+    return 0;
+  }
+
+  const filtered = arr.filter(entry => {
+    const entryDate = new Date(entry.entry_date);
+    return (
+      entryDate >= new Date(startDate) &&
+      entryDate <= new Date(endDate)
+    );
+  });
+
+  return sumByKey(filtered, key);
+}
+
+export function percentChange(current, previous) {
+  if (typeof current !== 'number' || typeof previous !== 'number') {
+    console.error("Both inputs must be numbers.");
+    return 0;
+  }
+
+  if (previous === 0) {
+    // Avoid division by zero
+    return current === 0 ? 0 : 100;
+  }
+
+  const change = ((current - previous) / Math.abs(previous)) * 100;
+  return Math.round(change);
+}
+
+export function getYearDateRange() {
+  const now = new Date();
+  const year = now.getFullYear();
+
+  const pad = (n) => n.toString().padStart(2, '0');
+
+  const yearStart = `${year}-01-01`;
+  const currentDate = `${year}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
+  return { yearStart, currentDate };
+}
+
+export function getPreviousYearDateRange() {
+  const now = new Date();
+  const previousYear = now.getFullYear() - 1;
+
+  const pad = (n) => n.toString().padStart(2, '0');
+
+  const yearStart = `${previousYear}-01-01`;
+  const currentDate = `${previousYear}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
+  return { yearStart, currentDate };
+}
