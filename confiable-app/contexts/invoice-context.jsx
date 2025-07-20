@@ -212,6 +212,7 @@ const initialState = {
   itemsPerPage: 7,
   sortBy: "",
   filterBy: "",
+  searchTerm: "",
   isCreateModalOpen: false,
   isDetailModalOpen: false,
   isSuccessModalOpen: false,
@@ -224,6 +225,7 @@ const ACTIONS = {
   SET_CURRENT_PAGE: "SET_CURRENT_PAGE",
   SET_SORT_BY: "SET_SORT_BY",
   SET_FILTER_BY: "SET_FILTER_BY",
+  SET_SEARCH_TERM: "SET_SEARCH_TERM",
   OPEN_CREATE_MODAL: "OPEN_CREATE_MODAL",
   CLOSE_CREATE_MODAL: "CLOSE_CREATE_MODAL",
   OPEN_DETAIL_MODAL: "OPEN_DETAIL_MODAL",
@@ -257,6 +259,12 @@ function invoiceReducer(state, action) {
         ...state,
         filterBy: action.payload,
         currentPage: 1, // Reset to first page when filtering
+      };
+    case ACTIONS.SET_SEARCH_TERM:
+      return {
+        ...state,
+        searchTerm: action.payload,
+        currentPage: 1, // Reset to first page when searching
       };
     case ACTIONS.OPEN_CREATE_MODAL:
       return {
@@ -313,6 +321,13 @@ export function InvoiceProvider({ children }) {
   const filteredAndSortedInvoices = useMemo(() => {
     let filtered = [...state.invoices];
 
+    // Apply search
+    if (state.searchTerm) {
+      filtered = filtered.filter((invoice) =>
+        invoice.name.toLowerCase().includes(state.searchTerm.toLowerCase())
+      );
+    }
+
     // Apply filter
     if (state.filterBy) {
       filtered = filtered.filter((invoice) => {
@@ -346,7 +361,7 @@ export function InvoiceProvider({ children }) {
     }
 
     return filtered;
-  }, [state.invoices, state.filterBy, state.sortBy]);
+  }, [state.invoices, state.filterBy, state.sortBy, state.searchTerm]);
 
   const paginatedInvoices = useMemo(() => {
     const startIndex = (state.currentPage - 1) * state.itemsPerPage;
@@ -383,6 +398,8 @@ export function InvoiceProvider({ children }) {
       dispatch({ type: ACTIONS.SET_SORT_BY, payload: sortBy }),
     setFilterBy: (filterBy) =>
       dispatch({ type: ACTIONS.SET_FILTER_BY, payload: filterBy }),
+    setSearchTerm: (searchTerm) =>
+      dispatch({ type: ACTIONS.SET_SEARCH_TERM, payload: searchTerm }),
     openCreateModal: () => dispatch({ type: ACTIONS.OPEN_CREATE_MODAL }),
     closeCreateModal: () => dispatch({ type: ACTIONS.CLOSE_CREATE_MODAL }),
     openDetailModal: (invoice) =>

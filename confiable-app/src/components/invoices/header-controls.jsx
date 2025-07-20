@@ -1,22 +1,40 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Filter, SortAsc, Download, Plus } from "lucide-react";
+import { Filter, SortAsc, Download, Plus, Search } from "lucide-react";
 import { useInvoice } from "@/contexts/invoice-context";
 
 export function HeaderControls() {
-  const { setSortBy, setFilterBy, openCreateModal, downloadInvoices } =
-    useInvoice();
+  const {
+    setSortBy,
+    setFilterBy,
+    openCreateModal,
+    downloadInvoices,
+    searchTerm,
+    setSearchTerm,
+  } = useInvoice();
 
   return (
-    <div className="flex flex-row justify-between items-center gap-4 mb-6">
-      <div className="flex gap-2">
+    <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+      <div className="relative w-full md:w-auto">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+        <Input
+          type="text"
+          placeholder="Search by customer name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10 w-full md:w-64 bg-transparent"
+        />
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -68,9 +86,7 @@ export function HeaderControls() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
 
-      <div className="flex gap-2">
         <Button
           variant="outline"
           onClick={downloadInvoices}
