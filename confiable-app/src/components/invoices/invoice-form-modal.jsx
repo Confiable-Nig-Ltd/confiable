@@ -59,8 +59,8 @@ export function InvoiceFormModal() {
 
   return (
     <Dialog open={isCreateModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="flex flex-row items-center justify-between">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="flex flex-row items-center justify-between sticky top-0 z-10 pb-4">
           <DialogTitle className="text-lg font-semibold">
             Create New Invoice
           </DialogTitle>

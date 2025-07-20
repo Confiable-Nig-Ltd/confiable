@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { useInvoice } from "@/contexts/invoice-context";
+import Logo from "../general/Logo";
 
 export function InvoiceDetailModal() {
   const { isDetailModalOpen, closeDetailModal, selectedInvoice } = useInvoice();
@@ -20,11 +21,7 @@ export function InvoiceDetailModal() {
       <DialogContent className="sm:max-w-lg max-h-[90vh]">
         <DialogHeader className="flex flex-row items-center justify-between sticky top-0 z-10 pb-2">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
-              <div className="w-3 h-3 bg-white rounded-sm"></div>
-            </div>
-            <span className="font-bold text-sm">Confiable</span>
-            <span className="text-xs text-gray-500">Nigeria Limited</span>
+            <Logo />
           </div>
         </DialogHeader>
 
