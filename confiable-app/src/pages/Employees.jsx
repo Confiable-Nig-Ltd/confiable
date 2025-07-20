@@ -819,6 +819,40 @@ const EmployeeSuccess = ({ employee, onClose }) => (
   </div>
 );
 
+const DepartmentDetails = ({ department, onClose }) => (
+  <div className="space-y-4">
+    <h2 className="text-black font-bold text-md">Department Details</h2>
+    <p className="text-gray-500 font-light text-sm mb-4">
+      Details for {department.name} department
+    </p>
+    <div className="bg-gray-50 p-4 rounded-lg border">
+      <div className="space-y-2 text-sm">
+        <div><span className="font-medium text-gray-700">Department Name:</span> {department.name}</div>
+        <div><span className="font-medium text-gray-700">Location:</span> {department.location}</div>
+        <div><span className="font-medium text-gray-700">Manager:</span> {department.manager.name}</div>
+        <div>
+          <span className="font-medium text-gray-700">Manager Picture:</span>
+          <div className="mt-2">
+            <img
+              src={department.manager.picture}
+              alt={`${department.manager.name}'s profile`}
+              className="h-16 w-16 rounded-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="flex justify-center pt-4">
+      <button
+        onClick={onClose}
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+);
+
 const initialEmployees = [
   {
     id: 1,
@@ -830,6 +864,7 @@ const initialEmployees = [
     salary: "350000",
     status: "Active",
     role: "Marketing Manager",
+    picture: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=64&h=64&q=80",
   },
   {
     id: 2,
@@ -841,6 +876,7 @@ const initialEmployees = [
     salary: "100000",
     status: "Inactive",
     role: "Sales Lead",
+    picture: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=64&h=64&q=80",
   },
 ];
 
@@ -848,18 +884,14 @@ const initialDepartments = [
   {
     id: 1,
     name: "Human Resources",
-    employees: 67,
     location: "Lagos Office",
-    lead: "Adebayo Johnson",
-    role: "Manager",
+    manager: initialEmployees[0], // Mbiatke Nkanta
   },
   {
     id: 2,
     name: "Sales",
-    employees: 42,
     location: "Abuja Office",
-    lead: "Chioma Umeh",
-    role: "Team Lead",
+    manager: initialEmployees[1], // Ada Chioma
   },
 ];
 
@@ -869,6 +901,8 @@ export default function EmployeeDashboard() {
   const [departments, setDepartments] = useState(initialDepartments);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDepartmentModalOpen, setIsDepartmentModalOpen] = useState(false);
+  const [isDepartmentDetailsOpen, setIsDepartmentDetailsOpen] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [editingEmployee, setEditingEmployee] = useState(null);
@@ -883,13 +917,12 @@ export default function EmployeeDashboard() {
     joined: "",
     salary: "",
     status: "Active",
+    picture: "",
   });
   const [departmentFormData, setDepartmentFormData] = useState({
     name: "",
-    employees: "",
     location: "",
-    lead: "",
-    role: "",
+    manager: "",
   });
   const rowsPerPage = 5;
 
@@ -927,9 +960,6 @@ export default function EmployeeDashboard() {
     if (!departmentFormData.name) {
       errors.name = "Department name is required";
     }
-    if (departmentFormData.employees < 0) {
-      errors.employees = "Number of employees cannot be negative";
-    }
     return errors;
   };
 
@@ -949,7 +979,11 @@ export default function EmployeeDashboard() {
         )
       );
     } else {
-      updatedEmployee = { ...formData, id: employees.length + 1 };
+      updatedEmployee = {
+        ...formData,
+        id: employees.length + 1,
+        picture: formData.picture || "https://images.unsplash.com/photo-1511367461989-2de3b3d00000?ixlib=rb-4.0.3&auto=format&fit=crop&w=64&h=64&q=80",
+      };
       setEmployees((prev) => [updatedEmployee, ...prev]);
     }
     setLastSavedEmployee(updatedEmployee);
@@ -962,6 +996,7 @@ export default function EmployeeDashboard() {
       joined: "",
       salary: "",
       status: "Active",
+      picture: "",
     });
     setEditingEmployee(null);
     setShowSuccess(true);
@@ -975,16 +1010,23 @@ export default function EmployeeDashboard() {
       alert(JSON.stringify(errors, null, 2));
       return;
     }
+    const selectedEmployee = employees.find((emp) => emp.name === departmentFormData.manager);
+    if (!selectedEmployee) {
+      alert("Please select a valid manager.");
+      return;
+    }
     setDepartments((prev) => [
-      { ...departmentFormData, id: prev.length + 1, employees: parseInt(departmentFormData.employees) },
+      {
+        ...departmentFormData,
+        id: prev.length + 1,
+        manager: selectedEmployee,
+      },
       ...prev,
     ]);
     setDepartmentFormData({
       name: "",
-      employees: "",
       location: "",
-      lead: "",
-      role: "",
+      manager: "",
     });
     setIsDepartmentModalOpen(false);
   };
@@ -1019,6 +1061,7 @@ export default function EmployeeDashboard() {
       joined: "",
       salary: "",
       status: "Active",
+      picture: "",
     });
   };
 
@@ -1032,11 +1075,19 @@ export default function EmployeeDashboard() {
     setIsDepartmentModalOpen(false);
     setDepartmentFormData({
       name: "",
-      employees: "",
       location: "",
-      lead: "",
-      role: "",
+      manager: "",
     });
+  };
+
+  const handleViewDepartmentDetails = (department) => {
+    setSelectedDepartment(department);
+    setIsDepartmentDetailsOpen(true);
+  };
+
+  const handleCloseDepartmentDetailsModal = () => {
+    setIsDepartmentDetailsOpen(false);
+    setSelectedDepartment(null);
   };
 
   const filteredEmployees = useMemo(
@@ -1373,22 +1424,23 @@ export default function EmployeeDashboard() {
                     {dept.name}
                   </h3>
                   <div className="text-sm text-gray-600 mb-1">
-                    <span className="font-medium text-gray-700">Employees:</span>{" "}
-                    {dept.employees}
-                  </div>
-                  <div className="text-sm text-gray-600 mb-1">
                     <span className="font-medium text-gray-700">Location:</span>{" "}
                     {dept.location}
                   </div>
-                  <div className="text-sm text-gray-600 mb-1">
-                    <span className="font-medium text-gray-700">Lead:</span>{" "}
-                    {dept.lead}
+                  <div className="text-sm text-gray-600 mb-4 flex items-center">
+                    <span className="font-medium text-gray-700 mr-2">Manager:</span>
+                    <img
+                      src={dept.manager.picture}
+                      alt={`${dept.manager.name}'s profile`}
+                      className="h-12 w-12 rounded-full object-cover mr-2"
+                    />
+                    {dept.manager.name}
                   </div>
-                  <div className="text-sm text-gray-600 mb-4">
-                    <span className="font-medium text-gray-700">Role:</span>{" "}
-                    {dept.role}
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700">
+                  <button
+                    onClick={() => handleViewDepartmentDetails(dept)}
+                    className="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700"
+                    aria-label={`View details for ${dept.name}`}
+                  >
                     View Details
                   </button>
                 </div>
@@ -1437,6 +1489,7 @@ export default function EmployeeDashboard() {
                   { label: "Department", name: "department", type: "text" },
                   { label: "Date of Employment", name: "joined", type: "date" },
                   { label: "Salary (₦)", name: "salary", type: "number" },
+                  { label: "Picture URL", name: "picture", type: "url" },
                 ].map(({ label, name, type }) => (
                   <div key={name}>
                     <label htmlFor={name} className="block text-sm font-light text-black mb-1">
@@ -1448,7 +1501,7 @@ export default function EmployeeDashboard() {
                       type={type}
                       value={formData[name]}
                       onChange={handleChange}
-                      required
+                      required={name !== "picture"}
                       placeholder={`Enter ${label.toLowerCase()}`}
                       className="w-full px-3 py-2 border rounded text-sm text-gray-700 placeholder:text-gray-400"
                     />
@@ -1492,29 +1545,54 @@ export default function EmployeeDashboard() {
               <p className="text-gray-500 font-light text-sm mb-8">
                 Enter department information to create a new record
               </p>
-              {[
-                { label: "Department Name", name: "name", type: "text" },
-                { label: "Number of Employees", name: "employees", type: "number" },
-                { label: "Location", name: "location", type: "text" },
-                { label: "Lead", name: "lead", type: "text" },
-                { label: "Role", name: "role", type: "text" },
-              ].map(({ label, name, type }) => (
-                <div key={name}>
-                  <label htmlFor={name} className="block text-sm font-light text-black mb-1">
-                    {label}
-                  </label>
-                  <input
-                    id={name}
-                    name={name}
-                    type={type}
-                    value={departmentFormData[name]}
-                    onChange={handleDepartmentChange}
-                    required
-                    placeholder={`Enter ${label.toLowerCase()}`}
-                    className="w-full px-3 py-2 border rounded text-sm text-gray-700 placeholder:text-gray-400"
-                  />
-                </div>
-              ))}
+              <div>
+                <label htmlFor="name" className="block text-sm font-light text-black mb-1">
+                  Department Name
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={departmentFormData.name}
+                  onChange={handleDepartmentChange}
+                  required
+                  placeholder="Enter department name"
+                  className="w-full px-3 py-2 border rounded text-sm text-gray-700 placeholder:text-gray-400"
+                />
+              </div>
+              <div>
+                <label htmlFor="location" className="block text-sm font-light text-black mb-1">
+                  Location
+                </label>
+                <input
+                  id="location"
+                  name="location"
+                  type="text"
+                  value={departmentFormData.location}
+                  onChange={handleDepartmentChange}
+                  required
+                  placeholder="Enter location"
+                  className="w-full px-3 py-2 border rounded text-sm text-gray-700 placeholder:text-gray-400"
+                />
+              </div>
+              <div>
+                <label htmlFor="manager" className="block text-sm font-light text-black mb-1">
+                  Manager
+                </label>
+                <select
+                  id="manager"
+                  name="manager"
+                  value={departmentFormData.manager}
+                  onChange={handleDepartmentChange}
+                  required
+                  className="w-full px-3 py-2 border rounded text-sm text-gray-700"
+                >
+                  <option value="" disabled>Select Manager</option>
+                  {employees.map((emp) => (
+                    <option key={emp.id} value={emp.name}>{emp.name}</option>
+                  ))}
+                </select>
+              </div>
               <div className="flex justify-center pt-4">
                 <button
                   type="submit"
@@ -1524,6 +1602,33 @@ export default function EmployeeDashboard() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Department Details Modal */}
+      {isDepartmentDetailsOpen && selectedDepartment && (
+        <div
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center px-4"
+          onClick={handleCloseDepartmentDetailsModal}
+          aria-modal="true"
+          role="dialog"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+          >
+            <button
+              onClick={handleCloseDepartmentDetailsModal}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl font-bold"
+              aria-label="Close modal"
+            >
+              ×
+            </button>
+            <DepartmentDetails
+              department={selectedDepartment}
+              onClose={handleCloseDepartmentDetailsModal}
+            />
           </div>
         </div>
       )}
