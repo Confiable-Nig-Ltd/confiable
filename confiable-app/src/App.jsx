@@ -10,11 +10,12 @@ import AppLayout from "./layouts/AppLayout";
 //Pages
 import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
-import Payroll from "./pages/Payroll";
+// import Payroll from "./pages/Payroll";
 import Invoices from "./pages/Invoices";
 import Banking from "./pages/Banking";
 import Inventory from "./pages/Inventory";
 import Settings from "./pages/Settings";
+import PayrollPage from "./pages/Payroll";
 
 export default function App() {
   return (
@@ -50,7 +51,8 @@ export default function App() {
             path="/payroll"
             element={
               <Protected>
-                <Payroll />
+                {/* <Payroll /> */}
+                <PayrollPage />
               </Protected>
             }
           />
@@ -112,6 +114,7 @@ export default function App() {
 //         <Route path="/login" element={<LoginPage />}></Route>
 //         <Route path="/employees" element={<Employees />}></Route>
 //         <Route path="/dashboard" element={<Dashboard />}></Route>
+//         {/* <Route path="/banking" element={<Bank />}></Route> */}
 //       </Routes>
 //     </Router>
 //   );
