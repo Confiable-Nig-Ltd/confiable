@@ -604,7 +604,10 @@ export default function EmployeeOverview() {
       {activeTab === "warehouse" && (
         <section className="bg-white p-6 rounded-xl shadow mb-6">
           <h2 className="text-xl font-semibold mb-2">Warehouse</h2>
-          <p className="text-gray-600">Warehouse overview or management tools go here.</p>
+          <p className="text-gray-600">Manage warehouse locations and inventory distribution</p>
+          <button className="bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 flex justify-end items-center mt-4">
+            Add Warehouse
+          </button>
         </section>
       )}
     </div>
