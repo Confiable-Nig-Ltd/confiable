@@ -252,11 +252,11 @@ export default function EmployeeOverview() {
   const belowReorderCount = inventoryData.filter(item => item.reorderLevel < 15).length;
 
   return (
-    <div className="p-2 sm:p-4">
+    <div className="p-2 sm:p-4 bg-indigo-900">
       {/* Tabs */}
       <div className="bg-white border rounded-lg p-4 mb-6">
         <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
-          {["overview", "products", "inventory", "warehouse"].map((tab) => (
+          {["overview", "products", "inventory", "warehouse", "supplier"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -599,6 +599,7 @@ export default function EmployeeOverview() {
           </div>
         </section>
       )}
+      
 
       {/* Warehouse Tab */}
       {activeTab === "warehouse" && (
@@ -610,6 +611,7 @@ export default function EmployeeOverview() {
           </button>
         </section>
       )}
+
     </div>
   );
 }
