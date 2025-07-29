@@ -210,57 +210,65 @@
 //   );
 // }
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { FiEdit, FiTrash2, FiPlus, FiX } from "react-icons/fi";
+import { format, parse } from "date-fns";
 
 const initialTransactions = [
   {
-    date: "24/08/2023",
+    date: "2023-08-24",
     description: "Office Chair",
-    amount: "40,000",
+    amount: 40000,
     type: "Income",
     source: "Zenith Bank",
   },
   {
-    date: "24/08/2023",
+    date: "2023-08-24",
     description: "Laptop Computers",
-    amount: "450,000",
+    amount: 450000,
     type: "Expense",
     source: "Access Bank",
   },
   {
-    date: "24/08/2023",
+    date: "2023-08-24",
     description: "Office Tables",
-    amount: "100,000",
+    amount: 100000,
     type: "Income",
     source: "Providus Bank",
   },
   {
-    date: "24/08/2023",
+    date: "2023-08-24",
     description: "Office Chair",
-    amount: "40,000",
+    amount: 40000,
     type: "Expense",
     source: "Cash",
   },
   {
-    date: "24/08/2023",
+    date: "2023-08-24",
     description: "Office Chair",
-    amount: "400,000",
+    amount: 400000,
     type: "Income",
     source: "Cash",
   },
   {
-    date: "24/08/2023",
+    date: "2023-08-24",
     description: "Ceiling Fans",
-    amount: "150,000",
+    amount: 150000,
     type: "Expense",
     source: "GTB Bank",
   },
 ];
 
+const formatDate = (dateStr) => {
+  if (!dateStr) return "";
+  const date = parse(dateStr, "yyyy-MM-dd", new Date());
+  return format(date, "dd/MM/yyyy");
+};
+
 const TransactionTable = () => {
   const [transactions, setTransactions] = useState(initialTransactions);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingIndex, setEditingIndex] = useState(null);
   const [formData, setFormData] = useState({
     date: "",
     description: "",
@@ -272,17 +280,24 @@ const TransactionTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // Filter and paginate
-  const filteredTransactions = transactions.filter((t) =>
-    `${t.date} ${t.description} ${t.amount} ${t.type} ${t.source}`
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
-  const paginatedData = filteredTransactions.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((t) =>
+      `${formatDate(t.date)} ${t.description} ${t.amount} ${t.type} ${t.source}`
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    );
+  }, [transactions, searchQuery]);
+
+  const paginatedData = useMemo(() => {
+    return filteredTransactions.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    );
+  }, [filteredTransactions, currentPage]);
 
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
 
@@ -293,7 +308,23 @@ const TransactionTable = () => {
 
   const handleAddTransaction = (e) => {
     e.preventDefault();
-    setTransactions([formData, ...transactions]);
+    if (formData.amount <= 0) {
+      alert("Amount must be greater than 0");
+      return;
+    }
+    if (!formData.date || !formData.description || !formData.source) {
+      alert("Please fill all required fields");
+      return;
+    }
+    const newTransaction = { ...formData, amount: Number(formData.amount) };
+    if (editingIndex !== null) {
+      setTransactions(
+        transactions.map((t, i) => (i === editingIndex ? newTransaction : t))
+      );
+      setEditingIndex(null);
+    } else {
+      setTransactions([newTransaction, ...transactions]);
+    }
     setFormData({
       date: "",
       description: "",
@@ -304,8 +335,21 @@ const TransactionTable = () => {
     setIsModalOpen(false);
   };
 
+  const handleDeleteTransaction = (index) => {
+    setTransactions(transactions.filter((_, i) => i !== index));
+  };
+
+  const handleEditTransaction = (index) => {
+    setFormData({
+      ...transactions[index],
+      amount: transactions[index].amount.toString(),
+    });
+    setEditingIndex(index);
+    setIsModalOpen(true);
+  };
+
   return (
-    <div className="p-4 bg-white rounded-xl shadow-md">
+    <div className="p-4 bg-indigo-700 rounded-xl shadow-md">
       {/* Search bar */}
       <div className="p-4 bg-white border rounded-lg mb-6">
         <input
@@ -314,6 +358,7 @@ const TransactionTable = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full px-4 py-2 border rounded-lg text-sm outline-none"
+          aria-label="Search transactions"
         />
       </div>
 
@@ -322,7 +367,18 @@ const TransactionTable = () => {
         <h2 className="text-xl font-semibold">Transactions</h2>
         <button
           className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2"
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setEditingIndex(null);
+            setFormData({
+              date: "",
+              description: "",
+              amount: "",
+              type: "Income",
+              source: "",
+            });
+            setIsModalOpen(true);
+          }}
+          aria-label="Add new transaction"
         >
           <FiPlus /> Add New Transaction
         </button>
@@ -330,7 +386,11 @@ const TransactionTable = () => {
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full text-sm">
+        <table
+          className="min-w-full text-sm"
+          role="grid"
+          aria-label="Transactions table"
+        >
           <thead>
             <tr className="bg-gray-100 text-left">
               <th className="px-4 py-2">Date</th>
@@ -344,16 +404,24 @@ const TransactionTable = () => {
           <tbody>
             {paginatedData.map((t, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-2">{t.date}</td>
+                <td className="px-4 py-2">{formatDate(t.date)}</td>
                 <td className="px-4 py-2">{t.description}</td>
-                <td className="px-4 py-2">{t.amount}</td>
+                <td className="px-4 py-2">{t.amount.toLocaleString()}</td>
                 <td className="px-4 py-2">{t.type}</td>
                 <td className="px-4 py-2">{t.source}</td>
                 <td className="px-4 py-2 flex gap-2">
-                  <button className="text-blue-600">
+                  <button
+                    className="text-blue-600"
+                    onClick={() => handleEditTransaction(index)}
+                    aria-label={`Edit transaction for ${t.description}`}
+                  >
                     <FiEdit />
                   </button>
-                  <button className="text-red-600">
+                  <button
+                    className="text-red-600"
+                    onClick={() => handleDeleteTransaction(index)}
+                    aria-label={`Delete transaction for ${t.description}`}
+                  >
                     <FiTrash2 />
                   </button>
                 </td>
@@ -381,6 +449,7 @@ const TransactionTable = () => {
                 ? "bg-blue-600 text-white"
                 : "bg-gray-100 text-gray-700"
             }`}
+            aria-label={`Go to page ${i + 1}`}
           >
             {i + 1}
           </button>
@@ -397,17 +466,21 @@ const TransactionTable = () => {
             className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close icon */}
             <button
               onClick={() => setIsModalOpen(false)}
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+              aria-label="Close modal"
             >
               <FiX size={20} />
             </button>
 
-            <h3 className="text-md text-2xl mt-6 mb-4">Add New Transaction</h3>
+            <h3 className="text-md text-2xl mt-6 mb-4">
+              {editingIndex !== null ? "Edit Transaction" : "Add New Transaction"}
+            </h3>
             <p className="text-gray-600 font-light mb-7">
-              Enter transaction details to create a new record
+              {editingIndex !== null
+                ? "Update transaction details"
+                : "Enter transaction details to create a new record"}
             </p>
             <form onSubmit={handleAddTransaction} className="space-y-4">
               <div>
@@ -451,6 +524,7 @@ const TransactionTable = () => {
                   placeholder="e.g. 40000"
                   className="w-full border rounded px-3 py-2"
                   required
+                  min="1"
                 />
               </div>
 
@@ -488,7 +562,7 @@ const TransactionTable = () => {
                 type="submit"
                 className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
               >
-                Save Transaction
+                {editingIndex !== null ? "Update Transaction" : "Save Transaction"}
               </button>
             </form>
           </div>
