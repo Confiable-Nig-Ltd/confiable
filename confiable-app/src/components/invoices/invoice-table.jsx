@@ -19,25 +19,25 @@ export function InvoiceTable() {
       <Table>
         <TableHeader className="[&_tr]:border-0">
           <TableRow className="bg-gray-50">
-            <TableHead className="py-4 font-medium text-gray-600">
+            <TableHead className="py-4 font-bold text-lg text-black">
               Name
             </TableHead>
-            <TableHead className="py-4 font-medium text-gray-600">
+            <TableHead className="py-4 font-bold text-lg text-black">
               Product
             </TableHead>
-            <TableHead className="py-4 font-medium text-gray-600">
+            <TableHead className="py-4 font-bold text-lg text-black">
               Quantity
             </TableHead>
-            <TableHead className="py-4 font-medium text-gray-600">
+            <TableHead className="py-4 font-bold text-lg text-black">
               Price
             </TableHead>
-            <TableHead className="py-4 font-medium text-gray-600">
+            <TableHead className="py-4 font-bold text-lg text-black">
               Tax
             </TableHead>
-            <TableHead className="py-4 font-medium text-gray-600">
+            <TableHead className="py-4 font-bold text-lg text-black">
               Payment Date
             </TableHead>
-            <TableHead className="py-4 font-medium text-gray-600">
+            <TableHead className="py-4 font-bold text-lg text-black">
               Action
             </TableHead>
           </TableRow>
