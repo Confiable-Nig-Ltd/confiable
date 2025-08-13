@@ -1,575 +1,95 @@
-// import React, { useState } from "react";
-// import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
+import React, { useState } from "react";
+import { TrendingDown, TrendingUp } from "lucide-react";
 
-// const initialEmployees = [
-//   {
-//     date: "2023-08-24",
-//     description: "office chairs",
-//     amount: "350000",
-//     type: "expenses",
-//     source: "Office Supplies",
-//     status: "Active",
-//   },
-//   {
-//     name: "Ada Chioma",
-//     phone: "08133344455",
-//     email: "ada@example.com",
-//     department: "Sales",
-//     joined: "2019-01-20",
-//     salary: "100000",
-//     status: "Inactive",
-//     role: "Sales Lead",
-//   },
-//   {
-//     name: "Ada Ben",
-//     phone: "08133344455",
-//     email: "ada@example.com",
-//     department: "Sales",
-//     joined: "2019-01-20",
-//     salary: "100000",
-//     status: "Inactive",
-//     role: "Sales Lead",
-//   },
-//   {
-//     name: "Tana Ofik",
-//     phone: "08133344455",
-//     email: "tana@example.com",
-//     department: "Sales",
-//     joined: "2019-01-20",
-//     salary: "100000",
-//     status: "Inactive",
-//     role: "Sales Lead",
-//   },
-//   {
-//     name: "Biola Adeyemi",
-//     phone: "08133344455",
-//     email: "ada@example.com",
-//     department: "Sales",
-//     joined: "2019-01-20",
-//     salary: "100000",
-//     status: "Inactive",
-//     role: "Sales Lead",
-//   },
-//   {
-//     name: "Confidence Bassey",
-//     phone: "08133344455",
-//     email: "confidence@example.com",
-//     department: "Sales",
-//     joined: "2019-01-20",
-//     salary: "100000",
-//     status: "Inactive",
-//     role: "Sales Lead",
-//   },
-//   {
-//     name: "Seun Adebayo",
-//     phone: "08133344455",
-//     email: "seun@example.com",
-//     department: "Sales",
-//     joined: "2019-01-20",
-//     salary: "100000",
-//     status: "Inactive",
-//     role: "Sales Lead",
-//   },
-// ];
+const Card = ({ title, count, growth, growthColor, action, icon: Icon, iconColor }) => (
+  <div className="bg-white rounded-2xl shadow-md p-3 w-full flex flex-col">
+    <div className="flex justify-between items-start mb-4">
+      <div>
+        <h2 className="text-gray-500 text-sm font-medium">{title}</h2>
+        <div className="text-3xl font-bold text-gray-800">{count}</div>
+      </div>
+      <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-opacity-10`} style={{ backgroundColor: `${iconColor}20` }}>
+        {Icon && <Icon className="text-xl" color={iconColor} />}
+      </div>
+    </div>
+    <p className={`text-sm font-medium mb-2 ${growthColor}`}>{growth}</p>
+    <button className="text-blue-600 text-sm font-semibold hover:underline">
+      {action}
+    </button>
+  </div>
+);
 
-// export default function Banking() {
-//   const [selectedTab, setSelectedTab] = useState("list");
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-
-//   const itemsPerPage = 5;
-//   const totalPages = Math.ceil(initialEmployees.length / itemsPerPage);
-//   const currentEmployees = initialEmployees.slice(
-//     (currentPage - 1) * itemsPerPage,
-//     currentPage * itemsPerPage
-//   );
-
-//   return (
-//     <div className="p-4">
-//       {/* Search Box */}
-//       <section>
-//         <div className="p-4 bg-white border rounded-lg mb-6">
-//           <p className="text-gray-500 text-sm">Search anything here...</p>
-//         </div>
-//       </section>
-
-//       {/* Tab Navigation (optional) */}
-//       <div className="mb-4">
-//         <button
-//           onClick={() => setSelectedTab("list")}
-//           className={`px-4 py-2 mr-2 rounded ${
-//             selectedTab === "list" ? "bg-blue-600 text-white" : "bg-gray-100"
-//           }`}
-//         >
-//           Transaction List
-//         </button>
-//       </div>
-
-//       {selectedTab === "list" && (
-//         <section className="bg-white border rounded-lg p-4 mb-6">
-//           <div className="flex justify-between items-center mb-4">
-//             <h2 className="text-2xl font-bold">Transaction</h2>
-//             <button
-//               onClick={() => setIsModalOpen(true)}
-//               className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-indigo-700"
-//             >
-//               Add New Transactions
-//             </button>
-//           </div>
-
-//           {/* Table */}
-//           <div className="overflow-x-auto">
-//             <table className="min-w-full text-sm border">
-//               <thead className="bg-gray-100">
-//                 <tr>
-//                   <th className="px-4 py-2 border">Date</th>
-//                   <th className="px-4 py-2 border">Description</th>
-//                   <th className="px-4 py-2 border">Amount</th>
-//                   <th className="px-4 py-2 border">Type</th>
-//                   <th className="px-4 py-2 border">Source/Destination</th>
-
-//                   <th className="px-4 py-2 border">Status</th>
-//                   <th className="px-4 py-2 border">Actions</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {currentEmployees.map((emp, index) => (
-//                   <tr key={index} className="hover:bg-gray-50">
-//                     <td className="px-4 py-2 border">{emp.date}</td>
-//                     <td className="px-4 py-2 border">{emp.description}</td>
-//                     <td className="px-4 py-2 border">{emp.amount}</td>
-//                     <td className="px-4 py-2 border">{emp.type}</td>
-//                     <td className="px-4 py-2 border">{emp.source}</td>
-//                     <td className="px-4 py-2 border">{emp.status}</td>
-//                     <td className="px-4 py-2 border">₦{emp.action}</td>
-//                     <td className="px-4 py-2 border">
-//                       <span
-//                         className={`px-2 py-1 rounded-full text-xs font-semibold ${
-//                           emp.status === "Active"
-//                             ? "bg-blue-100 text-blue-700"
-//                             : "bg-red-100 text-red-700"
-//                         }`}
-//                       >
-//                         {emp.status}
-//                       </span>
-//                     </td>
-//                     <td className="px-4 py-2 border">
-//                       <div className="flex flex-col space-y-1">
-//                         <button className="flex items-center text-blue-600 hover:text-blue-800">
-//                           <FiEdit className="mr-1" /> Edit
-//                         </button>
-//                         <button className="flex items-center text-green-600 hover:text-green-800">
-//                           <FiPlus className="mr-1" /> Add
-//                         </button>
-//                         <button className="flex items-center text-red-600 hover:text-red-800">
-//                           <FiTrash2 className="mr-1" /> Delete
-//                         </button>
-//                       </div>
-//                     </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </div>
-
-//           {/* Pagination */}
-//           <div className="flex justify-center mt-6 space-x-1">
-//             <button
-//               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-//               disabled={currentPage === 1}
-//               className="px-3 py-1 text-sm rounded border hover:bg-gray-100 disabled:opacity-50"
-//             >
-//               Prev
-//             </button>
-//             {Array.from({ length: totalPages }, (_, i) => (
-//               <button
-//                 key={i}
-//                 onClick={() => setCurrentPage(i + 1)}
-//                 className={`px-3 py-1 text-sm rounded border ${
-//                   currentPage === i + 1
-//                     ? "bg-blue-600 text-white"
-//                     : "hover:bg-gray-100"
-//                 }`}
-//               >
-//                 {i + 1}
-//               </button>
-//             ))}
-//             <button
-//               onClick={() =>
-//                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-//               }
-//               disabled={currentPage === totalPages}
-//               className="px-3 py-1 text-sm rounded border hover:bg-gray-100 disabled:opacity-50"
-//             >
-//               Next
-//             </button>
-//           </div>
-//         </section>
-//       )}
-//     </div>
-//   );
-// }
-
-import React, { useState, useEffect, useMemo } from "react";
-import { FiEdit, FiTrash2, FiPlus, FiX } from "react-icons/fi";
-import { format, parse } from "date-fns";
-
-const initialTransactions = [
-  {
-    date: "2023-08-24",
-    description: "Office Chair",
-    amount: 40000,
-    type: "Income",
-    source: "Zenith Bank",
-  },
-  {
-    date: "2023-08-24",
-    description: "Laptop Computers",
-    amount: 450000,
-    type: "Expense",
-    source: "Access Bank",
-  },
-  {
-    date: "2023-08-24",
-    description: "Office Tables",
-    amount: 100000,
-    type: "Income",
-    source: "Providus Bank",
-  },
-  {
-    date: "2023-08-24",
-    description: "Office Chair",
-    amount: 40000,
-    type: "Expense",
-    source: "Cash",
-  },
-  {
-    date: "2023-08-24",
-    description: "Office Chair",
-    amount: 400000,
-    type: "Income",
-    source: "Cash",
-  },
-  {
-    date: "2023-08-24",
-    description: "Ceiling Fans",
-    amount: 150000,
-    type: "Expense",
-    source: "GTB Bank",
-  },
-];
-
-const formatDate = (dateStr) => {
-  if (!dateStr) return "";
-  const date = parse(dateStr, "yyyy-MM-dd", new Date());
-  return format(date, "dd/MM/yyyy");
-};
-
-const TransactionTable = () => {
-  const [transactions, setTransactions] = useState(initialTransactions);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [formData, setFormData] = useState({
-    date: "",
-    description: "",
-    amount: "",
-    type: "Income",
-    source: "",
-  });
+const TransactionTabs = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
-
-  const filteredTransactions = useMemo(() => {
-    return transactions.filter((t) =>
-      `${formatDate(t.date)} ${t.description} ${t.amount} ${t.type} ${t.source}`
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
-    );
-  }, [transactions, searchQuery]);
-
-  const paginatedData = useMemo(() => {
-    return filteredTransactions.slice(
-      (currentPage - 1) * itemsPerPage,
-      currentPage * itemsPerPage
-    );
-  }, [filteredTransactions, currentPage]);
-
-  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleAddTransaction = (e) => {
-    e.preventDefault();
-    if (formData.amount <= 0) {
-      alert("Amount must be greater than 0");
-      return;
-    }
-    if (!formData.date || !formData.description || !formData.source) {
-      alert("Please fill all required fields");
-      return;
-    }
-    const newTransaction = { ...formData, amount: Number(formData.amount) };
-    if (editingIndex !== null) {
-      setTransactions(
-        transactions.map((t, i) => (i === editingIndex ? newTransaction : t))
-      );
-      setEditingIndex(null);
-    } else {
-      setTransactions([newTransaction, ...transactions]);
-    }
-    setFormData({
-      date: "",
-      description: "",
-      amount: "",
-      type: "Income",
-      source: "",
-    });
-    setIsModalOpen(false);
-  };
-
-  const handleDeleteTransaction = (index) => {
-    setTransactions(transactions.filter((_, i) => i !== index));
-  };
-
-  const handleEditTransaction = (index) => {
-    setFormData({
-      ...transactions[index],
-      amount: transactions[index].amount.toString(),
-    });
-    setEditingIndex(index);
-    setIsModalOpen(true);
-  };
+  const [activeTab, setActiveTab] = useState("overview");
 
   return (
-    <div className="p-4 bg-indigo-700 rounded-xl shadow-md">
-      {/* Search bar */}
-      <div className="p-4 bg-white border rounded-lg mb-6">
-        <input
-          type="text"
-          placeholder="Search anything here..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-4 py-2 border rounded-lg text-sm outline-none"
-          aria-label="Search transactions"
-        />
-      </div>
+    <>
+      <div className="p-4 rounded-xl shadow-md bg-indigo-700">
+        {/* Search bar */}
+        <div className="p-4 bg-white border rounded-lg mb-6 mt-2">
+          <input
+            type="text"
+            placeholder="search anything here..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-4 py-2 border rounded-lg text-sm outline-none"
+            aria-label="Search"
+          />
+        </div>
 
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Transactions</h2>
-        <button
-          className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2"
-          onClick={() => {
-            setEditingIndex(null);
-            setFormData({
-              date: "",
-              description: "",
-              amount: "",
-              type: "Income",
-              source: "",
-            });
-            setIsModalOpen(true);
-          }}
-          aria-label="Add new transaction"
-        >
-          <FiPlus /> Add New Transaction
-        </button>
-      </div>
-
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table
-          className="min-w-full text-sm"
-          role="grid"
-          aria-label="Transactions table"
-        >
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="px-4 py-2">Date</th>
-              <th className="px-4 py-2">Description</th>
-              <th className="px-4 py-2">Amount</th>
-              <th className="px-4 py-2">Type</th>
-              <th className="px-4 py-2">Source/Destination</th>
-              <th className="px-4 py-2">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedData.map((t, index) => (
-              <tr key={index} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-2">{formatDate(t.date)}</td>
-                <td className="px-4 py-2">{t.description}</td>
-                <td className="px-4 py-2">{t.amount.toLocaleString()}</td>
-                <td className="px-4 py-2">{t.type}</td>
-                <td className="px-4 py-2">{t.source}</td>
-                <td className="px-4 py-2 flex gap-2">
-                  <button
-                    className="text-blue-600"
-                    onClick={() => handleEditTransaction(index)}
-                    aria-label={`Edit transaction for ${t.description}`}
-                  >
-                    <FiEdit />
-                  </button>
-                  <button
-                    className="text-red-600"
-                    onClick={() => handleDeleteTransaction(index)}
-                    aria-label={`Delete transaction for ${t.description}`}
-                  >
-                    <FiTrash2 />
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {paginatedData.length === 0 && (
-              <tr>
-                <td colSpan="6" className="text-center py-4 text-gray-400">
-                  No matching transactions found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-center mt-4 gap-2 flex-wrap">
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentPage(i + 1)}
-            className={`px-3 py-1 rounded-md ${
-              currentPage === i + 1
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-700"
-            }`}
-            aria-label={`Go to page ${i + 1}`}
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
-
-      {/* Modal */}
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-2"
-          onClick={() => setIsModalOpen(false)}
-        >
-          <div
-            className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-              aria-label="Close modal"
-            >
-              <FiX size={20} />
-            </button>
-
-            <h3 className="text-md text-2xl mt-6 mb-4">
-              {editingIndex !== null ? "Edit Transaction" : "Add New Transaction"}
-            </h3>
-            <p className="text-gray-600 font-light mb-7">
-              {editingIndex !== null
-                ? "Update transaction details"
-                : "Enter transaction details to create a new record"}
-            </p>
-            <form onSubmit={handleAddTransaction} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Date
-                </label>
-                <input
-                  type="date"
-                  name="date"
-                  value={formData.date}
-                  onChange={handleChange}
-                  className="w-full border rounded px-3 py-2"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
-                </label>
-                <input
-                  type="text"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  placeholder="e.g. Office Chair"
-                  className="w-full border rounded px-3 py-2"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Amount
-                </label>
-                <input
-                  type="number"
-                  name="amount"
-                  value={formData.amount}
-                  onChange={handleChange}
-                  placeholder="e.g. 40000"
-                  className="w-full border rounded px-3 py-2"
-                  required
-                  min="1"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Transaction Type
-                </label>
-                <select
-                  name="type"
-                  value={formData.type}
-                  onChange={handleChange}
-                  className="w-full border rounded px-3 py-2"
+        {/* Tabs */}
+        <div className="bg-white border rounded-lg p-4">
+          <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
+            {["Purchase Order", "Stock Transaction", "Sales Order", "Account", "Customer"].map(
+              (tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2 rounded-xl text-sm transition ${
+                    activeTab === tab
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 hover:bg-blue-600 hover:text-white"
+                  }`}
                 >
-                  <option>Income</option>
-                  <option>Expense</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Source/Destination
-                </label>
-                <input
-                  type="text"
-                  name="source"
-                  value={formData.source}
-                  onChange={handleChange}
-                  placeholder="e.g. Zenith Bank"
-                  className="w-full border rounded px-3 py-2"
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-              >
-                {editingIndex !== null ? "Update Transaction" : "Save Transaction"}
-              </button>
-            </form>
+                  {tab}
+                </button>
+              )
+            )}
           </div>
         </div>
-      )}
-    </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+        <Card
+          title="Total Revenue"
+          count="120"
+          growthColor="text-green-500"
+          icon={TrendingUp}
+          iconColor="#22c55e"
+        />
+        <Card
+          title="Total Expenses"
+          count="77"
+          growthColor="text-green-500"
+          icon={TrendingDown}
+          iconColor="red"
+        />
+        <Card
+          title="Net Profit"
+          count="20"
+          growthColor="text-green-500"
+          icon={TrendingDown}
+          iconColor="red"
+        />
+        <Card
+          title="Cash Flows"
+          count="17"
+          
+        />
+      </div>
+    </>
   );
 };
 
-export default TransactionTable;
+export default TransactionTabs;
