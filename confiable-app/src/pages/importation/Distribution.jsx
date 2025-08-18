@@ -10,6 +10,8 @@ import { useState, useEffect } from "react";
 import { useContainerStore } from "@/stores/container-store";
 import { useAllocationStore } from "@/stores/allocation-store";
 import { useDistributionStore } from "@/stores/distribution-store";
+// Node environment from Vite config
+const VITE_NODE_ENV = import.meta.env.MODE;
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,10 +38,9 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 
 export default function DistributionPage() {
-  const { containers, getDistributionContainers } = useContainerStore();
+  const { containers } = useContainerStore();
   const { employees, getEmployeeById } = useAllocationStore();
-  const { distributions, addDistribution, getDistributionHistory } =
-    useDistributionStore();
+  const { addDistribution, getDistributionHistory } = useDistributionStore();
   const { toast } = useToast();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -213,7 +214,7 @@ export default function DistributionPage() {
         <p className="text-muted-foreground">
           Distribute container stock among multiple employees
         </p>
-        {process.env.NODE_ENV === "development" && (
+        {VITE_NODE_ENV === "development" && (
           <p className="text-xs text-muted-foreground mt-2">
             Debug: {containers.length} total containers,{" "}
             {availableContainers.length} available for distribution

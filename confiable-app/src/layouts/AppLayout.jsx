@@ -43,10 +43,11 @@ export default function AppLayout() {
         <nav className="flex flex-col gap-4">
           {navSetting.map((navItem) => (
             <NavButton
-              key={navItem.path}
+              key={navItem.path || navItem.text}
               icon={navItem.icon}
               text={navItem.text}
               path={navItem.path}
+              subItems={navItem.subItems}
               action={setSidebarOpen}
             />
           ))}
