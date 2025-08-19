@@ -43,10 +43,11 @@ export default function AppLayout() {
         <nav className="flex flex-col gap-4">
           {navSetting.map((navItem) => (
             <NavButton
-              key={navItem.path}
+              key={navItem.path || navItem.text}
               icon={navItem.icon}
               text={navItem.text}
               path={navItem.path}
+              subItems={navItem.subItems}
               action={setSidebarOpen}
             />
           ))}
@@ -79,7 +80,7 @@ export default function AppLayout() {
         {/* Main content */}
         <main
           className={cn(
-            "flex-1 overflow-auto bg-gray-50 p-4 md:p-6",
+            "flex-1 overflow-auto bg-gray-50 p-4 md:p-4",
             accentSoftBgColor
           )}
         >
