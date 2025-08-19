@@ -60,7 +60,7 @@ export default function NavButton({ path, text, action, icon, subItems }) {
       )}
 
       {hasSubItems && isOpen && (
-        <div className="ml-4 space-y-1">
+        <div className="ml-4 space-y-1 max-h-[200px] overflow-y-auto">
           {subItems.map((item) => (
             <NavButton
               key={item.path}

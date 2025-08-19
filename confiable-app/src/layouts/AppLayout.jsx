@@ -26,11 +26,11 @@ export default function AppLayout() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-[250px] bg-white p-6 z-40 transform transition-transform duration-300 ease-in-out
+        className={`fixed top-0 left-0 h-full w-[250px] bg-white z-40 transform transition-transform duration-300 ease-in-out overflow-y-auto
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         md:translate-x-0 md:static md:w-[200px] md:block`}
       >
-        <div className="flex justify-between items-center mb-10">
+        <div className="sticky top-0 bg-white flex justify-between items-center p-6 z-10">
           <Logo />
           <button
             className="md:hidden"
@@ -40,7 +40,7 @@ export default function AppLayout() {
             <X className="w-6 h-6" />
           </button>
         </div>
-        <nav className="flex flex-col gap-4">
+        <nav className="px-6 pb-6 flex flex-col gap-4">
           {navSetting.map((navItem) => (
             <NavButton
               key={navItem.path || navItem.text}
