@@ -46,9 +46,9 @@ export function ContainerForm({ container, onClose }) {
         supplierName: container.supplierName,
         shippingDate: container.shippingDate.split("T")[0],
         arrivalDate: container.arrivalDate.split("T")[0],
-        totalInvoiceValueUSD: container.totalInvoiceValueUSD.toString(),
+        totalInvoiceValueUSD: container.totalValue?.toString() || "",
         notes: container.notes || "",
-        containers: container.containers,
+        containers: container.containers || [],
       });
     }
   }, [container]);
