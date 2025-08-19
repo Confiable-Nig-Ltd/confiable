@@ -80,7 +80,7 @@ export default function AppLayout() {
         {/* Main content */}
         <main
           className={cn(
-            "flex-1 overflow-auto bg-gray-50 p-4 md:p-6",
+            "flex-1 overflow-auto bg-gray-50 p-4 md:p-4",
             accentSoftBgColor
           )}
         >
