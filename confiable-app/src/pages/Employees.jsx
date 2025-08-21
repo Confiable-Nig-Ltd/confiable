@@ -1150,7 +1150,7 @@ export default function EmployeeDashboard() {
   }, [employees, departments]);
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-indigo-900">
       {/* Tab Navigation */}
       <section className="bg-white border rounded-lg mb-6 p-4">
         <label htmlFor="search" className="sr-only">Search employees</label>
@@ -1207,10 +1207,10 @@ export default function EmployeeDashboard() {
             <h2 className="text-2xl font-bold">Employee List</h2>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-indigo-700"
+              className="flex items-center gap-2 bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-indigo-700"
               aria-label="Add new employee"
             >
-              Add New Employee
+                <FiPlus /> Add New Employee
             </button>
           </div>
 
@@ -1407,10 +1407,10 @@ export default function EmployeeDashboard() {
             <h2 className="text-xl font-semibold">Departments</h2>
             <button
               onClick={() => setIsDepartmentModalOpen(true)}
-              className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-indigo-700"
+              className="flex items-center gap-2 bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-indigo-700"
               aria-label="Add new department"
             >
-              Add New Department
+             <FiPlus /> Add New Department
             </button>
           </div>
           <p className="mb-4">Manage organisation departments and their details.</p>

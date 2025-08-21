@@ -8,9 +8,9 @@ import Logo from "../components/general/Logo";
 import NotificationBell from "../components/app-layout/NotificationBell";
 
 export default function AppLayout() {
-  const { accent, accentSoftBgColor } = accentClassNames;
-  const currentPath = useLocation().pathname
-  const pageTitle = getPageTitle(currentPath)
+  const { accentSoftBgColor } = accentClassNames;
+  const currentPath = useLocation().pathname;
+  const pageTitle = getPageTitle(currentPath);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -18,9 +18,9 @@ export default function AppLayout() {
     <div className="w-screen h-screen flex flex-col md:flex-row md:overflow-hidden">
       {/* Mobile sidebar (overlay) */}
       <div
-        className={cn(`fixed inset-0 bg-opacity-50 z-30 md:hidden transition-opacity ${
+        className={`fixed inset-0 bg-black/50 z-30 md:hidden transition-opacity ${
           sidebarOpen ? "block" : "hidden"
-        }`, accent)}
+        }`}
         onClick={() => setSidebarOpen(false)}
       />
 
@@ -43,10 +43,11 @@ export default function AppLayout() {
         <nav className="flex flex-col gap-4">
           {navSetting.map((navItem) => (
             <NavButton
-              key={navItem.path}
+              key={navItem.path || navItem.text}
               icon={navItem.icon}
               text={navItem.text}
               path={navItem.path}
+              subItems={navItem.subItems}
               action={setSidebarOpen}
             />
           ))}
@@ -66,7 +67,9 @@ export default function AppLayout() {
             >
               <Menu className="w-6 h-6 text-gray-600" />
             </button>
-            <h1 className="text-2xl text-gray-500 font-semibold">{pageTitle}</h1>
+            <h1 className="text-2xl text-gray-500 font-semibold">
+              {pageTitle}
+            </h1>
           </div>
           <div className="flex items-center gap-6">
             <NotificationBell count={5} />
@@ -75,7 +78,12 @@ export default function AppLayout() {
         </header>
 
         {/* Main content */}
-        <main className={cn("flex-1 overflow-auto bg-gray-50 p-4 md:p-6", accentSoftBgColor)}>
+        <main
+          className={cn(
+            "flex-1 overflow-auto bg-gray-50 p-4 md:p-4",
+            accentSoftBgColor
+          )}
+        >
           <Outlet />
         </main>
       </div>

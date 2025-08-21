@@ -46,7 +46,7 @@ export default function DashboardGrid() {
   }
 
   return (
-    <div className="max-w-[1100px] flex flex-col px-2 justify-center mx-auto">
+    <div className="max-w-[1100px] flex flex-col px-2 justify-center mx-auto bg-indigo-900">
       {/* XL Screens */}
       <div
         className="xl:grid hidden justify-center grid-cols-1 gap-4 p-4

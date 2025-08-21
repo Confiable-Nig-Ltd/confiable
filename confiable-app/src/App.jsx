@@ -6,20 +6,28 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import Protected from "./components/auth/Protected";
 import MainLayout from "./layouts/MainLayout";
 import AppLayout from "./layouts/AppLayout";
+import { Toaster } from "sonner";
 
 //Pages
 import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
-// import Payroll from "./pages/Payroll";
 import Invoices from "./pages/Invoices";
 import Banking from "./pages/Banking";
 import Inventory from "./pages/Inventory";
 import Settings from "./pages/Settings";
 import PayrollPage from "./pages/Payroll";
 
+// Importation Pages
+import ContainerRecords from "./pages/importation/ContainerRecords";
+import VesselImports from "./pages/importation/VesselImports";
+import Allocation from "./pages/importation/Allocation";
+import Distribution from "./pages/importation/Distribution";
+import DollarTracker from "./pages/importation/DollarTracker";
+
 export default function App() {
   return (
     <Router>
+      <Toaster />
       <Routes>
         {/* Public routes with MainLayout */}
         <Route element={<MainLayout />}>
@@ -88,15 +96,52 @@ export default function App() {
               </Protected>
             }
           />
+          {/* Importation Routes */}
+          <Route
+            path="/importation/container-records"
+            element={
+              <Protected>
+                <ContainerRecords />
+              </Protected>
+            }
+          />
+          <Route
+            path="/importation/vessel-imports"
+            element={
+              <Protected>
+                <VesselImports />
+              </Protected>
+            }
+          />
+          <Route
+            path="/importation/allocation"
+            element={
+              <Protected>
+                <Allocation />
+              </Protected>
+            }
+          />
+          <Route
+            path="/importation/distribution"
+            element={
+              <Protected>
+                <Distribution />
+              </Protected>
+            }
+          />
+          <Route
+            path="/importation/dollar-tracker"
+            element={
+              <Protected>
+                <DollarTracker />
+              </Protected>
+            }
+          />
         </Route>
       </Routes>
     </Router>
   );
 }
-
-
-
-
 
 // import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // import Home from "./pages/Home";
