@@ -10,15 +10,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Filter, SortAsc, Download, Plus, Search } from "lucide-react";
 import { useInvoice } from "@/contexts/invoice-context";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { InvoicesPDF } from "./invoices-pdf";
 
 export function HeaderControls() {
   const {
     setSortBy,
     setFilterBy,
     openCreateModal,
-    downloadInvoices,
     searchTerm,
     setSearchTerm,
+    filteredAndSortedInvoices,
   } = useInvoice();
 
   return (
@@ -87,14 +89,25 @@ export function HeaderControls() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Button
-          variant="outline"
-          onClick={downloadInvoices}
-          className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700"
+        <PDFDownloadLink
+          document={<InvoicesPDF invoices={filteredAndSortedInvoices} />}
+          fileName={`invoices-report-${
+            new Date().toISOString().split("T")[0]
+          }.pdf`}
         >
-          <Download className="h-4 w-4" />
-          <span className="hidden sm:inline">Download Invoice</span>
-        </Button>
+          {({ loading }) => (
+            <Button
+              variant="outline"
+              disabled={loading}
+              className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+            >
+              <Download className="h-4 w-4" />
+              <span className="hidden sm:inline">
+                {loading ? "Preparing Download..." : "Download Invoice"}
+              </span>
+            </Button>
+          )}
+        </PDFDownloadLink>
 
         <Button
           onClick={openCreateModal}
