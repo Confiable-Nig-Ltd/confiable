@@ -5,6 +5,150 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { useInvoice } from "@/contexts/invoice-context";
 import Logo from "../general/Logo";
+import {
+  PDFDownloadLink,
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+} from "@react-pdf/renderer";
+
+const styles = StyleSheet.create({
+  page: {
+    padding: 30,
+    fontSize: 12,
+  },
+  header: {
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 10,
+  },
+  invoiceInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  customerDetails: {
+    marginBottom: 20,
+  },
+  table: {
+    marginBottom: 20,
+  },
+  tableHeader: {
+    flexDirection: "row",
+    backgroundColor: "#1E40AF",
+    color: "#ffffff",
+    padding: 8,
+    marginBottom: 8,
+  },
+  tableRow: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E5E7EB",
+    padding: 8,
+  },
+  col1: { width: "40%" },
+  col2: { width: "20%" },
+  col3: { width: "20%" },
+  col4: { width: "20%" },
+  totals: {
+    marginLeft: "auto",
+    width: "200px",
+  },
+  totalRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 5,
+  },
+  grandTotal: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#1E40AF",
+    color: "#ffffff",
+    padding: 8,
+    marginTop: 5,
+  },
+  footer: {
+    marginTop: 30,
+    textAlign: "center",
+  },
+});
+
+const InvoicePDF = ({ invoice }) => {
+  const subtotal = invoice.price * invoice.quantity * 4;
+  const taxAmount = (subtotal * 10) / 100;
+  const discountAmount = (subtotal * 5) / 100;
+  const grandTotal = subtotal + taxAmount - discountAmount;
+
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={styles.header}>
+          <Text style={styles.title}>INVOICE</Text>
+          <View style={styles.invoiceInfo}>
+            <Text>Invoice #: 001</Text>
+            <Text>30 September, 2025</Text>
+          </View>
+        </View>
+
+        <View style={styles.customerDetails}>
+          <Text style={{ marginBottom: 5 }}>INVOICE TO:</Text>
+          <Text style={{ fontSize: 14, fontWeight: "bold" }}>
+            {invoice.name}
+          </Text>
+          <Text>Account Officer, Main Warehouse</Text>
+          <Text>Lagos Industrial Estate</Text>
+          <Text>08122233344</Text>
+        </View>
+
+        <View style={styles.table}>
+          <View style={styles.tableHeader}>
+            <Text style={styles.col1}>Product Description</Text>
+            <Text style={styles.col2}>Price</Text>
+            <Text style={styles.col3}>Quantity</Text>
+            <Text style={styles.col4}>Total</Text>
+          </View>
+          {Array.from({ length: 4 }).map((_, index) => (
+            <View key={index} style={styles.tableRow}>
+              <Text style={styles.col1}>{invoice.product}</Text>
+              <Text style={styles.col2}>{invoice.price.toLocaleString()}</Text>
+              <Text style={styles.col3}>{invoice.quantity}</Text>
+              <Text style={styles.col4}>
+                {(invoice.price * invoice.quantity).toLocaleString()}
+              </Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.totals}>
+          <View style={styles.totalRow}>
+            <Text>Subtotal:</Text>
+            <Text>{subtotal.toLocaleString()}</Text>
+          </View>
+          <View style={styles.totalRow}>
+            <Text>Tax (10%):</Text>
+            <Text>{taxAmount.toLocaleString()}</Text>
+          </View>
+          <View style={styles.totalRow}>
+            <Text>Discount (5%):</Text>
+            <Text>{discountAmount.toLocaleString()}</Text>
+          </View>
+          <View style={styles.grandTotal}>
+            <Text>Grand Total</Text>
+            <Text>{grandTotal.toLocaleString()}</Text>
+          </View>
+        </View>
+
+        <View style={styles.footer}>
+          <Text>THANK YOU FOR YOUR BUSINESS</Text>
+        </View>
+      </Page>
+    </Document>
+  );
+};
 
 export function InvoiceDetailModal() {
   const { isDetailModalOpen, closeDetailModal, selectedInvoice } = useInvoice();
@@ -23,6 +167,22 @@ export function InvoiceDetailModal() {
           <div className="flex items-center gap-2">
             <Logo />
           </div>
+          <PDFDownloadLink
+            document={<InvoicePDF invoice={selectedInvoice} />}
+            fileName={`invoice-${selectedInvoice.name
+              .toLowerCase()
+              .replace(/\s+/g, "-")}.pdf`}
+          >
+            {({ loading }) => (
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 text-blue-600 border-blue-600 hover:bg-blue-50"
+                disabled={loading}
+              >
+                {loading ? "Loading..." : "Download PDF"}
+              </Button>
+            )}
+          </PDFDownloadLink>
         </DialogHeader>
 
         <div className="space-y-4 overflow-y-auto pr-2">
