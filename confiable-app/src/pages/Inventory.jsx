@@ -702,6 +702,7 @@ const EmployeeOverview = () => {
       unit: "Each",
       price: "40000",
       costPrice: "35000",
+      "tax_rate": 14.51,
       reorderLevel: 30,
       status: "Active",
       description: "Ergonomic office chair with lumbar support"
@@ -712,6 +713,7 @@ const EmployeeOverview = () => {
       unit: "Each",
       price: "80000",
       costPrice: "70000",
+      "tax_rate": 14.51,
       reorderLevel: 5,
       status: "Active",
       description: "Business laptop with 8GB RAM"
@@ -722,6 +724,7 @@ const EmployeeOverview = () => {
       unit: "Ream",
       price: "120000",
       costPrice: "105000",
+      "tax_rate": 14.51,
       reorderLevel: 20,
       status: "Active",
       description: "A4 size white paper"
@@ -732,6 +735,7 @@ const EmployeeOverview = () => {
       unit: "Each",
       price: "60000",
       costPrice: "50000",
+      "tax_rate": 14.51,
       reorderLevel: 10,
       status: "Active",
       description: "LED desk lamp with adjustable brightness"
@@ -742,6 +746,7 @@ const EmployeeOverview = () => {
       unit: "Each",
       price: "75000",
       costPrice: "60000",
+      "tax_rate": 14.51,
       reorderLevel: 8,
       status: "Active",
       description: "High-speed document scanner"
@@ -1092,6 +1097,7 @@ const EmployeeOverview = () => {
       unit: '',
       price: '',
       costPrice: '',
+      taxRate: '',
       reorderLevel: '',
       status: 'Active',
       description: '',
@@ -1424,6 +1430,7 @@ const EmployeeOverview = () => {
                   <th scope="col" className="p-3">Unit</th>
                   <th scope="col" className="p-3">Price</th>
                   <th scope="col" className="p-3">Cost Price</th>
+                  <th scope="col" className="p-3">Tax Rate</th>
                   <th scope="col" className="p-3">Re-order Level</th>
                   <th scope="col" className="p-3">Status</th>
                   <th scope="col" className="p-3">Actions</th>
