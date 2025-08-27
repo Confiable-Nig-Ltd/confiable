@@ -8,9 +8,9 @@ import Logo from "../components/general/Logo";
 import NotificationBell from "../components/app-layout/NotificationBell";
 
 export default function AppLayout() {
-  const { accent, accentSoftBgColor } = accentClassNames;
-  const currentPath = useLocation().pathname
-  const pageTitle = getPageTitle(currentPath)
+  const { accentSoftBgColor } = accentClassNames;
+  const currentPath = useLocation().pathname;
+  const pageTitle = getPageTitle(currentPath);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -18,19 +18,19 @@ export default function AppLayout() {
     <div className="w-screen h-screen flex flex-col md:flex-row md:overflow-hidden">
       {/* Mobile sidebar (overlay) */}
       <div
-        className={cn(`fixed inset-0 bg-opacity-50 z-30 md:hidden transition-opacity ${
+        className={`fixed inset-0 bg-black/50 z-30 md:hidden transition-opacity ${
           sidebarOpen ? "block" : "hidden"
-        }`, accent)}
+        }`}
         onClick={() => setSidebarOpen(false)}
       />
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-[250px] bg-white p-6 z-40 transform transition-transform duration-300 ease-in-out
+        className={`fixed top-0 left-0 h-full w-[250px] bg-white z-40 transform transition-transform duration-300 ease-in-out overflow-y-auto
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         md:translate-x-0 md:static md:w-[200px] md:block`}
       >
-        <div className="flex justify-between items-center mb-10">
+        <div className="sticky top-0 bg-white flex justify-between items-center p-6 z-10">
           <Logo />
           <button
             className="md:hidden"
@@ -40,13 +40,14 @@ export default function AppLayout() {
             <X className="w-6 h-6" />
           </button>
         </div>
-        <nav className="flex flex-col gap-4">
+        <nav className="px-6 pb-6 flex flex-col gap-4">
           {navSetting.map((navItem) => (
             <NavButton
-              key={navItem.path}
+              key={navItem.path || navItem.text}
               icon={navItem.icon}
               text={navItem.text}
               path={navItem.path}
+              subItems={navItem.subItems}
               action={setSidebarOpen}
             />
           ))}
@@ -66,7 +67,9 @@ export default function AppLayout() {
             >
               <Menu className="w-6 h-6 text-gray-600" />
             </button>
-            <h1 className="text-2xl text-gray-500 font-semibold">{pageTitle}</h1>
+            <h1 className="text-2xl text-gray-500 font-semibold">
+              {pageTitle}
+            </h1>
           </div>
           <div className="flex items-center gap-6">
             <NotificationBell count={5} />
@@ -75,7 +78,12 @@ export default function AppLayout() {
         </header>
 
         {/* Main content */}
-        <main className={cn("flex-1 overflow-auto bg-gray-50 p-4 md:p-6", accentSoftBgColor)}>
+        <main
+          className={cn(
+            "flex-1 overflow-auto bg-gray-50 p-4 md:p-4",
+            accentSoftBgColor
+          )}
+        >
           <Outlet />
         </main>
       </div>

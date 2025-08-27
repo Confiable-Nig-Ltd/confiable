@@ -82,7 +82,7 @@ import PayrollTable from '../components/dashboard/payroll/PayrollTable';
 
 const PayrollPage = () => {
   return (
-    <div className="p-4 sm:p-6 space-y-4">
+    <div className="p-4 sm:p-6 space-y-4 bg-indigo-900">
 
       <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center bg-white p-4 rounded-md shadow">
         
