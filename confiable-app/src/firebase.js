@@ -17,10 +17,10 @@
 // const auth = getAuth(app);
 // const db = getFirestore(app);
 
-// // const auth = {};
-// // const db = {};
+// const auth = {};
+// const db = {};
 
-export { auth, db };
+// export { auth, db };
 
 
 
