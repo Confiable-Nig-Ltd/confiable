@@ -1,27 +1,24 @@
 import React, { useState, useMemo } from 'react';
-import { Employees } from '../data/employeeData';
-import { Payroll } from '../data/payrollData';
+import { Employees } from '../../data/employeeData';
+import { Payroll } from '../../data/payrollData';
 
 const PayslipGenerator = () => {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
   const [selectedPeriod, setSelectedPeriod] = useState('');
 
-  // Filter payroll records based on selected employee
   const filteredPayrolls = useMemo(() => {
     return Payroll.filter(p => String(p.employee_id) === selectedEmployeeId);
   }, [selectedEmployeeId]);
 
-  // Get selected payroll data
   const selectedPayroll = useMemo(() => {
     return filteredPayrolls.find(p => p.payment_date === selectedPeriod);
   }, [filteredPayrolls, selectedPeriod]);
 
-  // Get employee details
   const employee = Employees.find(emp => String(emp.employee_id) === selectedEmployeeId);
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-GB'); // DD/MM/YYYY
+    return date.toLocaleDateString('en-GB'); 
   };
 
   return (
