@@ -12,6 +12,9 @@ import { useDollarTrackerStore } from "@/stores/dollar-tracker-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { Download } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -43,7 +46,7 @@ import { formatCurrency } from "@/utils/date-utils";
 
 export default function DollarTrackerPage() {
   const { containers } = useContainerStore();
-  const { payments, addPayment, getPaymentsByInvoice, getInvoiceSummary } =
+  const { addPayment, getPaymentsByInvoice, getInvoiceSummary } =
     useDollarTrackerStore();
   const { toast } = useToast();
 
@@ -96,7 +99,7 @@ export default function DollarTrackerPage() {
       activeInvoices,
       invoicesWithPayments,
     };
-  }, [containers, payments, getInvoiceSummary]);
+  }, [containers, getInvoiceSummary]);
 
   const handlePaymentSubmit = (e) => {
     e.preventDefault();
@@ -177,6 +180,126 @@ export default function DollarTrackerPage() {
     return usd * rate;
   };
 
+  const downloadSingleInvoicePDF = (invoice) => {
+    const doc = new jsPDF();
+    const payments = getPaymentsByInvoice(invoice.billOfLadingNumber);
+
+    // Add title and invoice details
+    doc.setFontSize(16);
+    doc.text("Invoice Payment Record", 14, 15);
+
+    // Add invoice details
+    doc.setFontSize(12);
+    doc.text("Invoice Details:", 14, 25);
+    doc.setFontSize(10);
+    doc.text(`Bill of Lading: ${invoice.billOfLadingNumber}`, 14, 32);
+    doc.text(`Supplier: ${invoice.supplierName}`, 14, 38);
+    doc.text(`Total Invoice Value: ${formatCurrency(invoice.totalInvoiceValueUSD)}`, 14, 44);
+    doc.text(`Total Paid: ${formatCurrency(invoice.totalPaidUSD)}`, 14, 50);
+    doc.text(`Outstanding: ${formatCurrency(invoice.outstandingUSD)}`, 14, 56);
+    doc.text(`Average Exchange Rate: ₦${invoice.averageExchangeRate?.toFixed(2) || "0.00"}`, 14, 62);
+
+    // Add date generated
+    doc.setFontSize(9);
+    doc.setTextColor(128);
+    doc.text(`Generated on ${format(new Date(), "dd/MM/yyyy HH:mm")}`, 14, 72);
+
+    // Create payment history table
+    autoTable(doc, {
+      startY: 80,
+      head: [["Date", "USD Amount", "Exchange Rate", "Naira Amount", "Method", "Reference"]],
+      body: payments.map((payment) => [
+        format(new Date(payment.paymentDate), "dd/MM/yyyy"),
+        formatCurrency(payment.usdAmountPaid),
+        `₦${payment.exchangeRate}`,
+        `₦${payment.nairaEquivalent.toLocaleString()}`,
+        payment.paymentMethod.replace("_", " "),
+        payment.referenceNumber || "-"
+      ]),
+      styles: { fontSize: 9 },
+      headStyles: { fillColor: [41, 128, 185] },
+    });
+
+    // Save the PDF
+    doc.save(`invoice-${invoice.billOfLadingNumber}.pdf`);
+
+    toast({
+      title: "PDF Generated",
+      description: `Payment record for ${invoice.billOfLadingNumber} has been downloaded.`,
+    });
+  };
+
+  const downloadInvoicesPDF = (invoices) => {
+    const doc = new jsPDF();
+
+    // Add title
+    doc.setFontSize(16);
+    doc.text("USD Payment Records", 14, 15);
+
+    // Add summary section
+    doc.setFontSize(12);
+    doc.text("Summary:", 14, 25);
+    doc.setFontSize(10);
+    doc.text(
+      `Total Outstanding: ${formatCurrency(summaryStats.totalOutstanding)}`,
+      14,
+      32
+    );
+    doc.text(
+      `Total Naira Spent: ₦${summaryStats.totalNairaSpent.toLocaleString()}`,
+      14,
+      38
+    );
+    doc.text(
+      `Average Exchange Rate: ₦${summaryStats.avgExchangeRate.toFixed(2)}`,
+      14,
+      44
+    );
+    doc.text(`Active Invoices: ${summaryStats.activeInvoices}`, 14, 50);
+
+    // Add date generated
+    doc.setFontSize(9);
+    doc.setTextColor(128);
+    doc.text(`Generated on ${format(new Date(), "dd/MM/yyyy HH:mm")}`, 14, 60);
+
+    // Create table
+    autoTable(doc, {
+      startY: 65,
+      head: [
+        [
+          "Bill of Lading",
+          "Supplier",
+          "Total USD",
+          "Paid USD",
+          "Outstanding",
+          "Status",
+        ],
+      ],
+      body: invoices.map((invoice) => [
+        invoice.billOfLadingNumber,
+        invoice.supplierName,
+        formatCurrency(invoice.totalInvoiceValueUSD),
+        formatCurrency(invoice.totalPaidUSD),
+        formatCurrency(invoice.outstandingUSD),
+        invoice.outstandingUSD === 0
+          ? "Paid"
+          : invoice.totalPaidUSD > 0
+          ? "Partial"
+          : "Outstanding",
+      ]),
+      styles: { fontSize: 9 },
+      headStyles: { fillColor: [41, 128, 185] },
+    });
+
+    // Save the PDF
+    doc.save("usd-payment-records.pdf");
+
+    toast({
+      title: "PDF Generated",
+      description: "The payment records have been downloaded as a PDF.",
+    });
+  };
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -251,8 +374,19 @@ export default function DollarTrackerPage() {
 
       {/* Outstanding Invoices Table */}
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Outstanding USD Payments</CardTitle>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              downloadInvoicesPDF(summaryStats.invoicesWithPayments)
+            }
+            className="flex items-center gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Download PDF
+          </Button>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -344,6 +478,13 @@ export default function DollarTrackerPage() {
                             onClick={() => handleViewHistory(invoice)}
                           >
                             <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => downloadSingleInvoicePDF(invoice)}
+                          >
+                            <Download className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>

@@ -1,5 +1,5 @@
-import { create } from "zustand"
-import { persist } from "zustand/middleware"
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export const useContainerStore = create(
   persist(
@@ -36,7 +36,9 @@ export const useContainerStore = create(
           totalBales: 300,
           totalValue: 18000,
           notes: "Premium grade materials - Partially allocated",
-          containers: [{ containerNumber: "CONT-003", balesCount: 300, weight: 7500 }],
+          containers: [
+            { containerNumber: "CONT-003", balesCount: 300, weight: 7500 },
+          ],
           createdAt: "2024-01-15T09:00:00.000Z",
           updatedAt: "2024-02-20T16:45:00.000Z",
         },
@@ -93,48 +95,65 @@ export const useContainerStore = create(
           id: globalThis.crypto.randomUUID(),
           status: "pending",
           totalContainers: container.containers.length,
-          totalBales: container.containers.reduce((sum, c) => sum + c.balesCount, 0),
+          totalBales: container.containers.reduce(
+            (sum, c) => sum + (Number(c.balesCount) || 0),
+            0
+          ),
+          totalValue: Number(container.totalValue) || 0,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-        }
+        };
         set((state) => ({
           containers: [...state.containers, newContainer],
-        }))
+        }));
       },
 
       updateContainer: (id, updates) => {
         set((state) => ({
           containers: state.containers.map((container) =>
-            container.id === id ? { ...container, ...updates, updatedAt: new Date().toISOString() } : container,
+            container.id === id
+              ? {
+                  ...container,
+                  ...updates,
+                  updatedAt: new Date().toISOString(),
+                }
+              : container
           ),
-        }))
+        }));
       },
 
       deleteContainer: (id) => {
         set((state) => ({
-          containers: state.containers.filter((container) => container.id !== id),
-        }))
+          containers: state.containers.filter(
+            (container) => container.id !== id
+          ),
+        }));
       },
 
       getContainerById: (id) => {
-        return get().containers.find((container) => container.id === id)
+        return get().containers.find((container) => container.id === id);
       },
 
       getAvailableContainers: () => {
         return get().containers.filter(
-          (container) => container.status === "arrived" || container.status === "allocated",
-        )
+          (container) =>
+            container.status === "arrived" || container.status === "allocated"
+        );
       },
 
       getDistributionContainers: () => {
         return get().containers.filter(
-          (container) => container.status === "arrived" || container.status === "allocated",
-        )
+          (container) =>
+            container.status === "arrived" || container.status === "allocated"
+        );
       },
     }),
     {
       name: "container-storage",
-      partialize: (state) => ({ containers: state.containers, suppliers: state.suppliers }),
-    },
-  ),
-)
+      partialize: (state) => ({
+        containers: state.containers,
+        suppliers: state.suppliers,
+      }),
+    }
+  )
+);
