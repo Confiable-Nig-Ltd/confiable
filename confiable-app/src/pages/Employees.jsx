@@ -1,21 +1,33 @@
-
 import React, { useState, useMemo } from "react";
 import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp } from "lucide-react";
 
-const Card = ({ title, count, growth, growthColor, action, icon: Icon, iconColor }) => (
+const Card = ({
+  title,
+  count,
+  growth,
+  growthColor,
+  action,
+  icon: Icon,
+  iconColor,
+}) => (
   <div className="bg-white rounded-2xl shadow-md p-3 w-full flex flex-col justify-between">
     <div className="flex justify-between items-start mb-4">
       <div>
         <h2 className="text-gray-500 text-sm font-medium">{title}</h2>
         <div className="text-3xl font-bold text-gray-800">{count}</div>
       </div>
-      <div className="w-10 h-10 rounded-full flex items-center justify-center bg-opacity-10" style={{ backgroundColor: `${iconColor}20` }}>
+      <div
+        className="w-10 h-10 rounded-full flex items-center justify-center bg-opacity-10"
+        style={{ backgroundColor: `${iconColor}20` }}
+      >
         {Icon && <Icon className="text-xl" color={iconColor} />}
       </div>
     </div>
     <p className={`text-sm font-medium mb-2 ${growthColor}`}>{growth}</p>
-    <button className="text-blue-600 text-sm font-semibold hover:underline">{action}</button>
+    <button className="text-blue-600 text-sm font-semibold hover:underline">
+      {action}
+    </button>
   </div>
 );
 
@@ -27,25 +39,75 @@ const EmployeeDetails = ({ employee, onClose }) => (
     </p>
     <div className="bg-gray-50 p-4 rounded-lg border">
       <div className="space-y-2 text-sm">
-        <div><span className="font-medium text-gray-700">First Name:</span> {employee.firstName}</div>
-        <div><span className="font-medium text-gray-700">Last Name:</span> {employee.lastName}</div>
-        <div><span className="font-medium text-gray-700">Gender:</span> {employee.gender}</div>
-        <div><span className="font-medium text-gray-700">Date of Birth:</span> {employee.dateOfBirth}</div>
-        <div><span className="font-medium text-gray-700">Email:</span> {employee.email}</div>
-        <div><span className="font-medium text-gray-700">Phone:</span> {employee.phone}</div>
-        <div><span className="font-medium text-gray-700">Address:</span> {employee.address}</div>
-        <div><span className="font-medium text-gray-700">Hire Date:</span> {employee.hireDate}</div>
-        <div><span className="font-medium text-gray-700">Job Title:</span> {employee.jobTitle}</div>
-        <div><span className="font-medium text-gray-700">Department:</span> {employee.department}</div>
-        <div><span className="font-medium text-gray-700">Employment Status:</span> {employee.employmentStatus}</div>
-        <div><span className="font-medium text-gray-700">Bank Account Number:</span> {employee.bankAccountNumber}</div>
-        <div><span className="font-medium text-gray-700">Bank Name:</span> {employee.bankName}</div>
-        <div><span className="font-medium text-gray-700">Tax ID:</span> {employee.taxId}</div>
-        <div><span className="font-medium text-gray-700">National ID:</span> {employee.nationalId}</div>
+        <div>
+          <span className="font-medium text-gray-700">First Name:</span>{" "}
+          {employee.first_name}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Last Name:</span>{" "}
+          {employee.last_name}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Gender:</span>{" "}
+          {employee.gender}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Date of Birth:</span>{" "}
+          {employee.date_of_birth}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Email:</span>{" "}
+          {employee.email}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Phone:</span>{" "}
+          {employee.phone_number}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Address:</span>{" "}
+          {employee.address}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Hire Date:</span>{" "}
+          {employee.hire_date}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Job Title:</span>{" "}
+          {employee.job_title}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Department:</span>{" "}
+          {employee.department_id}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Employment Status:</span>{" "}
+          {employee.employment_status}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">
+            Bank Account Number:
+          </span>{" "}
+          {employee.bank_account_number}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Bank Name:</span>{" "}
+          {employee.bank_name}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Tax ID:</span>{" "}
+          {employee.tax_id}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">National ID:</span>{" "}
+          {employee.national_id}
+        </div>
       </div>
     </div>
     <div className="flex justify-center pt-4">
-      <button onClick={onClose} className="bg-blue-600 text-white w-full px-4 py-2 rounded hover:bg-blue-700">
+      <button
+        onClick={onClose}
+        className="bg-blue-600 text-white w-full px-4 py-2 rounded hover:bg-blue-700"
+      >
         Close
       </button>
     </div>
@@ -55,18 +117,31 @@ const EmployeeDetails = ({ employee, onClose }) => (
 const DepartmentDetails = ({ department, onClose }) => (
   <div className="space-y-4">
     <h2 className="text-black font-bold text-md">Department Details</h2>
-    <p className="text-gray-500 font-light text-sm mb-4">Details for {department.name} department</p>
+    <p className="text-gray-500 font-light text-sm mb-4">
+      Details for {department.id} department
+    </p>
     <div className="bg-gray-50 p-4 rounded-lg border">
       <div className="space-y-2 text-sm">
-        <div><span className="font-medium text-gray-700">Department Name:</span> {department.name}</div>
-        <div><span className="font-medium text-gray-700">Location:</span> {department.location}</div>
-        <div><span className="font-medium text-gray-700">Manager:</span> {department.manager.firstName} {department.manager.lastName}</div>
+        <div>
+          <span className="font-medium text-gray-700">Department Name:</span>{" "}
+          {department.name}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Location:</span>{" "}
+          {department.location}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Manager:</span>{" "}
+          {department.manager_id}
+        </div>
         <div>
           <span className="font-medium text-gray-700">Manager Picture:</span>
           <div className="mt-2">
             <img
-              src={department.manager.picture}
-              alt={`${department.manager.firstName} ${department.manager.lastName}'s profile`}
+              src={department?.manager?.picture || "/default-avatar.png"}
+              alt={`${department?.manager?.firstName || "Unknown"} ${
+                department?.manager?.lastName || ""
+              }'s profile`}
               className="h-16 w-16 rounded-full object-cover"
             />
           </div>
@@ -74,7 +149,10 @@ const DepartmentDetails = ({ department, onClose }) => (
       </div>
     </div>
     <div className="flex justify-center pt-4">
-      <button onClick={onClose} className="bg-blue-600 text-white w-full px-4 py-2 rounded hover:bg-blue-700">
+      <button
+        onClick={onClose}
+        className="bg-blue-600 text-white w-full px-4 py-2 rounded hover:bg-blue-700"
+      >
         Close
       </button>
     </div>
@@ -83,46 +161,74 @@ const DepartmentDetails = ({ department, onClose }) => (
 
 const initialEmployees = [
   {
-    id: 1,
-    firstName: "Mbiatke",
-    lastName: "Nkanta",
+    employee_id: 1,
+    first_name: "Danielle",
+    last_name: "Johnson",
     gender: "Male",
-    dateOfBirth: "1990-05-15",
-    email: "mbiatke@example.com",
-    phone: "09012222222",
-    address: "123 Lagos Street, Lagos",
-    hireDate: "2023-08-24",
-    jobTitle: "Marketing Manager",
-    department: "Marketing",
-    employmentStatus: "Active",
-    bankAccountNumber: "1234567890",
-    bankName: "First Bank",
-    taxId: "TX123456",
-    nationalId: "NG123456789",
+    date_of_birth: "1973-03-14",
+    email: "rhodespatricia@example.org",
+    phone_number: "001-260-501-3389",
+    address: "79402 Peterson Drives Apt. 511\nDavisstad, PA 35172",
+    hire_date: "2023-07-27",
+    job_title: "Psychiatric nurse",
+    department_id: 1,
+    employment_status: "Resigned",
+    bank_account_number: "RDMC84959310341316",
+    bank_name: "Chavez-Flowers",
+    tax_id: "167-48-5821",
+    national_id: "215-86-4375",
   },
   {
-    id: 2,
-    firstName: "Ada",
-    lastName: "Chioma",
+    employee_id: 2,
+    first_name: "Jacqueline",
+    last_name: "Sutton",
     gender: "Female",
-    dateOfBirth: "1988-03-22",
-    email: "ada@example.com",
-    phone: "08133344455",
-    address: "456 Abuja Road, Abuja",
-    hireDate: "2019-01-20",
-    jobTitle: "Sales Lead",
-    department: "Sales",
-    employmentStatus: "Inactive",
-    bankAccountNumber: "0987654321",
-    bankName: "GTBank",
-    taxId: "TX987654",
-    nationalId: "NG987654321",
+    date_of_birth: "1989-04-04",
+    email: "frankgray@example.net",
+    phone_number: "001-783-550-3056x413",
+    address: "724 John Points Suite 969\nCoxberg, NY 65187",
+    hire_date: "2016-05-29",
+    job_title: "Art gallery manager",
+    department_id: 2,
+    employment_status: "Active",
+    bank_account_number: "DEUF69166978480184",
+    bank_name: "Peterson, Carter and Moore",
+    tax_id: "004-93-4316",
+    national_id: "513-98-2928",
   },
 ];
 
 const initialDepartments = [
-  { id: 1, name: "Human Resources", location: "Lagos Office", manager: initialEmployees[0] },
-  { id: 2, name: "Sales", location: "Abuja Office", manager: initialEmployees[1] },
+  {
+    id: 1,
+    name: "Department 1",
+    location: "Shawnton",
+    manager: initialEmployees[7],
+  },
+  {
+    id: 2,
+    name: "Department 2",
+    location: "South Robert",
+    manager: initialEmployees[30],
+  },
+  {
+    id: 3,
+    name: "Department 3",
+    location: "Harrisberg",
+    manager: initialEmployees[19],
+  },
+  {
+    id: 4,
+    name: "Department 4",
+    location: "Michellemouth",
+    manager: initialEmployees[29],
+  },
+  {
+    id: 5,
+    name: "Department 5",
+    location: "Theresaberg",
+    manager: initialEmployees[23],
+  },
 ];
 
 function EmployeeDashboard() {
@@ -141,21 +247,21 @@ function EmployeeDashboard() {
   const [lastSavedEmployee, setLastSavedEmployee] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     gender: "",
-    dateOfBirth: "",
+    date_of_birth: "",
     email: "",
-    phone: "",
+    phone_number: "",
     address: "",
-    hireDate: "",
-    jobTitle: "",
-    department: "",
-    employmentStatus: "Active",
-    bankAccountNumber: "",
-    bankName: "",
-    taxId: "",
-    nationalId: "",
+    hire_date: "",
+    job_title: "",
+    department_id: "",
+    employment_status: "Active",
+    bank_account_number: "",
+    bank_name: "",
+    tax_id: "",
+    national_id: "",
   });
   const [departmentFormData, setDepartmentFormData] = useState({
     name: "",
@@ -185,14 +291,18 @@ function EmployeeDashboard() {
     if (!formData.lastName) errors.lastName = "Last name is required";
     if (!formData.gender) errors.gender = "Gender is required";
     if (!formData.dateOfBirth) errors.dateOfBirth = "Date of birth is required";
-    if (!/^\S+@\S+\.\S+$/.test(formData.email)) errors.email = "Invalid email format";
-    if (!/^\d{10,}$/.test(formData.phone)) errors.phone = "Phone number must be at least 10 digits";
+    if (!/^\S+@\S+\.\S+$/.test(formData.email))
+      errors.email = "Invalid email format";
+    if (!/^\d{10,}$/.test(formData.phone))
+      errors.phone = "Phone number must be at least 10 digits";
     if (!formData.address) errors.address = "Address is required";
     if (!formData.hireDate) errors.hireDate = "Hire date is required";
     if (!formData.jobTitle) errors.jobTitle = "Job title is required";
     if (!formData.department) errors.department = "Department is required";
-    if (!formData.employmentStatus) errors.employmentStatus = "Employment status is required";
-    if (!/^\d{10}$/.test(formData.bankAccountNumber)) errors.bankAccountNumber = "Bank account number must be 10 digits";
+    if (!formData.employmentStatus)
+      errors.employmentStatus = "Employment status is required";
+    if (!/^\d{10}$/.test(formData.bankAccountNumber))
+      errors.bankAccountNumber = "Bank account number must be 10 digits";
     if (!formData.bankName) errors.bankName = "Bank name is required";
     if (!formData.taxId) errors.taxId = "Tax ID is required";
     if (!formData.nationalId) errors.nationalId = "National ID is required";
@@ -215,7 +325,11 @@ function EmployeeDashboard() {
     let updatedEmployee;
     if (editingEmployee) {
       updatedEmployee = { ...formData, id: editingEmployee.id };
-      setEmployees((prev) => prev.map((emp) => (emp.id === editingEmployee.id ? updatedEmployee : emp)));
+      setEmployees((prev) =>
+        prev.map((emp) =>
+          emp.id === editingEmployee.id ? updatedEmployee : emp
+        )
+      );
     } else {
       updatedEmployee = {
         ...formData,
@@ -225,21 +339,21 @@ function EmployeeDashboard() {
     }
     setLastSavedEmployee(updatedEmployee);
     setFormData({
-      firstName: "",
-      lastName: "",
+      first_name: "",
+      last_name: "",
       gender: "",
-      dateOfBirth: "",
+      date_of_birth: "",
       email: "",
-      phone: "",
+      phone_number: "",
       address: "",
-      hireDate: "",
-      jobTitle: "",
-      department: "",
-      employmentStatus: "Active",
-      bankAccountNumber: "",
-      bankName: "",
-      taxId: "",
-      nationalId: "",
+      hire_date: "",
+      job_title: "",
+      department_id: "",
+      employment_status: "Active",
+      bank_account_number: "",
+      bank_name: "",
+      tax_id: "",
+      national_id: "",
     });
     setEditingEmployee(null);
     setShowSuccess(true);
@@ -253,7 +367,10 @@ function EmployeeDashboard() {
       alert(JSON.stringify(errors, null, 2));
       return;
     }
-    const selectedEmployee = employees.find((emp) => `${emp.firstName} ${emp.lastName}` === departmentFormData.manager);
+    const selectedEmployee = employees.find(
+      (emp) =>
+        `${emp.first_name} ${emp.last_name}` === departmentFormData.manager
+    );
     if (!selectedEmployee) {
       alert("Please select a valid manager.");
       return;
@@ -288,7 +405,12 @@ function EmployeeDashboard() {
         value !== "" &&
         (!editingEmployee || editingEmployee[key] !== value)
     );
-    if (isFormDirty && !window.confirm("You have unsaved changes. Are you sure you want to close?")) {
+    if (
+      isFormDirty &&
+      !window.confirm(
+        "You have unsaved changes. Are you sure you want to close?"
+      )
+    ) {
       return;
     }
     setIsModalOpen(false);
@@ -317,7 +439,9 @@ function EmployeeDashboard() {
   const handleCloseDepartmentModal = () => {
     if (
       Object.values(departmentFormData).some((value) => value !== "") &&
-      !window.confirm("You have unsaved changes. Are you sure you want to close?")
+      !window.confirm(
+        "You have unsaved changes. Are you sure you want to close?"
+      )
     ) {
       return;
     }
@@ -365,13 +489,20 @@ function EmployeeDashboard() {
     const totalEmployees = employees.length;
     const departmentsCount = departments.length;
     const newEmployees = employees.filter(
-      (emp) => new Date(emp.hireDate) > new Date(new Date().setMonth(new Date().getMonth() - 1))
+      (emp) =>
+        new Date(emp.hireDate) >
+        new Date(new Date().setMonth(new Date().getMonth() - 1))
     ).length;
     return [
       {
         title: "Total Employees",
         count: totalEmployees,
-        growth: totalEmployees > 0 ? `↑ ${Math.round((totalEmployees / (totalEmployees + 10)) * 100)}% from last month` : "No change",
+        growth:
+          totalEmployees > 0
+            ? `↑ ${Math.round(
+                (totalEmployees / (totalEmployees + 10)) * 100
+              )}% from last month`
+            : "No change",
         growthColor: totalEmployees > 0 ? "text-green-500" : "text-gray-500",
         action: "View Employees",
         icon: TrendingUp,
@@ -380,7 +511,12 @@ function EmployeeDashboard() {
       {
         title: "Number Of Departments",
         count: departmentsCount,
-        growth: departmentsCount > 0 ? `↑ ${Math.round((departmentsCount / (departmentsCount + 2)) * 100)}% this month` : "No change",
+        growth:
+          departmentsCount > 0
+            ? `↑ ${Math.round(
+                (departmentsCount / (departmentsCount + 2)) * 100
+              )}% this month`
+            : "No change",
         growthColor: departmentsCount > 0 ? "text-green-500" : "text-gray-500",
         action: "View Departments",
         icon: TrendingUp,
@@ -389,7 +525,12 @@ function EmployeeDashboard() {
       {
         title: "New Employees",
         count: newEmployees,
-        growth: newEmployees > 0 ? `↑ ${Math.round((newEmployees / (newEmployees + 5)) * 100)}% from last month` : "No change",
+        growth:
+          newEmployees > 0
+            ? `↑ ${Math.round(
+                (newEmployees / (newEmployees + 5)) * 100
+              )}% from last month`
+            : "No change",
         growthColor: newEmployees > 0 ? "text-green-500" : "text-gray-500",
         action: "Review Applicants",
         icon: TrendingUp,
@@ -401,7 +542,9 @@ function EmployeeDashboard() {
   return (
     <div className="p-4 bg-indigo-900">
       <section className="bg-white border rounded-lg mb-6 p-4">
-        <label htmlFor="search" className="sr-only">Search employees</label>
+        <label htmlFor="search" className="sr-only">
+          Search employees
+        </label>
         <input
           id="search"
           type="text"
@@ -426,7 +569,11 @@ function EmployeeDashboard() {
               }`}
               aria-pressed={selectedTab === tab}
             >
-              {tab === "overview" ? "Employee Overview" : tab === "list" ? "Employee List" : "Department"}
+              {tab === "overview"
+                ? "Employee Overview"
+                : tab === "list"
+                ? "Employee List"
+                : "Department"}
             </button>
           ))}
         </div>
@@ -457,14 +604,30 @@ function EmployeeDashboard() {
           </div>
           <div className="overflow-x-auto">
             {currentEmployees.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">No employees found.</p>
+              <p className="text-gray-500 text-center py-4">
+                No employees found.
+              </p>
             ) : (
               <>
-                <table className="min-w-full text-sm border hidden sm:table" aria-label="Employee list">
+                <table
+                  className="min-w-full text-sm border hidden sm:table"
+                  aria-label="Employee list"
+                >
                   <thead className="bg-gray-100">
                     <tr>
-                      {["First Name", "Last Name", "Email", "Department", "Status", "Actions"].map((header) => (
-                        <th key={header} className="px-4 py-2 border text-left" scope="col">
+                      {[
+                        "First Name",
+                        "Last Name",
+                        "Email",
+                        "Department",
+                        "Status",
+                        "Actions",
+                      ].map((header) => (
+                        <th
+                          key={header}
+                          className="px-4 py-2 border text-left"
+                          scope="col"
+                        >
                           {header}
                         </th>
                       ))}
@@ -473,20 +636,22 @@ function EmployeeDashboard() {
                   <tbody>
                     {currentEmployees.map((emp) => (
                       <tr key={emp.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-2 border">{emp.firstName}</td>
-                        <td className="px-4 py-2 border">{emp.lastName}</td>
+                        <td className="px-4 py-2 border">{emp.first_name}</td>
+                        <td className="px-4 py-2 border">{emp.last_name}</td>
                         <td className="px-4 py-2 border">{emp.email}</td>
-                        <td className="px-4 py-2 border">{emp.department}</td>
+                        <td className="px-4 py-2 border">
+                          {emp.department_id}
+                        </td>
                         <td className="px-4 py-2 border">
                           <span
                             className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                              emp.employmentStatus === "Active"
+                              emp.employment_status === "Active"
                                 ? "bg-blue-100 text-blue-700"
                                 : "bg-red-100 text-red-700"
                             }`}
-                            aria-label={`Employee status: ${emp.employmentStatus}`}
+                            aria-label={`Employee status: ${emp.employment_status}`}
                           >
-                            {emp.employmentStatus}
+                            {emp.employment_status}
                           </span>
                         </td>
                         <td className="px-4 py-2 border">
@@ -494,21 +659,21 @@ function EmployeeDashboard() {
                             <button
                               onClick={() => handleViewEmployee(emp)}
                               className="flex items-center text-blue-600 hover:text-blue-800"
-                              aria-label={`View ${emp.firstName} ${emp.lastName}`}
+                              aria-label={`View ${emp.first_name} ${emp.last_name}`}
                             >
                               <FiEdit className="mr-1" /> View
                             </button>
                             <button
                               onClick={() => handleEditEmployee(emp)}
                               className="flex items-center text-blue-600 hover:text-blue-800"
-                              aria-label={`Edit ${emp.firstName} ${emp.lastName}`}
+                              aria-label={`Edit ${emp.first_name} ${emp.last_name}`}
                             >
                               <FiEdit className="mr-1" /> Edit
                             </button>
                             <button
                               onClick={() => handleDeleteEmployee(emp.id)}
                               className="flex items-center text-red-600 hover:text-red-800"
-                              aria-label={`Delete ${emp.firstName} ${emp.lastName}`}
+                              aria-label={`Delete ${emp.first_name} ${emp.last_name}`}
                             >
                               <FiTrash2 className="mr-1" /> Delete
                             </button>
@@ -520,35 +685,110 @@ function EmployeeDashboard() {
                 </table>
                 <div className="sm:hidden space-y-4">
                   {currentEmployees.map((emp) => (
-                    <div key={emp.id} className="bg-white border rounded-lg p-4 shadow-sm">
+                    <div
+                      key={emp.id}
+                      className="bg-white border rounded-lg p-4 shadow-sm"
+                    >
                       <div className="space-y-2">
-                        <div><span className="font-medium text-gray-700">First Name:</span> {emp.firstName}</div>
-                        <div><span className="font-medium text-gray-700">Last Name:</span> {emp.lastName}</div>
-                        <div><span className="font-medium text-gray-700">Gender:</span> {emp.gender}</div>
-                        <div><span className="font-medium text-gray-700">Date of Birth:</span> {emp.dateOfBirth}</div>
-                        <div><span className="font-medium text-gray-700">Email:</span> {emp.email}</div>
-                        <div><span className="font-medium text-gray-700">Phone:</span> {emp.phone}</div>
-                        <div><span className="font-medium text-gray-700">Address:</span> {emp.address}</div>
-                        <div><span className="font-medium text-gray-700">Hire Date:</span> {emp.hireDate}</div>
-                        <div><span className="font-medium text-gray-700">Job Title:</span> {emp.jobTitle}</div>
-                        <div><span className="font-medium text-gray-700">Department:</span> {emp.department}</div>
                         <div>
-                          <span className="font-medium text-gray-700">Status:</span>{" "}
+                          <span className="font-medium text-gray-700">
+                            First Name:
+                          </span>{" "}
+                          {emp.first_name}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            Last Name:
+                          </span>{" "}
+                          {emp.last_name}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            Gender:
+                          </span>{" "}
+                          {emp.gender}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            Date of Birth:
+                          </span>{" "}
+                          {emp.date_of_birth}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            Email:
+                          </span>{" "}
+                          {emp.email}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            Phone:
+                          </span>{" "}
+                          {emp.phone_number}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            Address:
+                          </span>{" "}
+                          {emp.address}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            Hire Date:
+                          </span>{" "}
+                          {emp.hire_date}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            Job Title:
+                          </span>{" "}
+                          {emp.job_title}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            Department:
+                          </span>{" "}
+                          {emp.department_id}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            Status:
+                          </span>{" "}
                           <span
                             className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                              emp.employmentStatus === "Active"
+                              emp.employment_status === "Active"
                                 ? "bg-blue-100 text-blue-700"
                                 : "bg-red-100 text-red-700"
                             }`}
                             aria-label={`Employee status: ${emp.employmentStatus}`}
                           >
-                            {emp.employmentStatus}
+                            {emp.employment_status}
                           </span>
                         </div>
-                        <div><span className="font-medium text-gray-700">Bank Account:</span> {emp.bankAccountNumber}</div>
-                        <div><span className="font-medium text-gray-700">Bank Name:</span> {emp.bankName}</div>
-                        <div><span className="font-medium text-gray-700">Tax ID:</span> {emp.taxId}</div>
-                        <div><span className="font-medium text-gray-700">National ID:</span> {emp.nationalId}</div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            Bank Account:
+                          </span>{" "}
+                          {emp.bank_account_number}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            Bank Name:
+                          </span>{" "}
+                          {emp.bank_name}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            Tax ID:
+                          </span>{" "}
+                          {emp.tax_id}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            National ID:
+                          </span>{" "}
+                          {emp.national_id}
+                        </div>
                         <div className="flex space-x-2 pt-2">
                           <button
                             onClick={() => handleViewEmployee(emp)}
@@ -560,14 +800,14 @@ function EmployeeDashboard() {
                           <button
                             onClick={() => handleEditEmployee(emp)}
                             className="flex items-center text-blue-600 hover:text-blue-800 text-sm"
-                            aria-label={`Edit ${emp.firstName} ${emp.lastName}`}
+                            aria-label={`Edit ${emp.first_name} ${emp.last_name}`}
                           >
                             <FiEdit className="mr-1" /> Edit
                           </button>
                           <button
                             onClick={() => handleDeleteEmployee(emp.id)}
                             className="flex items-center text-red-600 hover:text-red-800 text-sm"
-                            aria-label={`Delete ${emp.firstName} ${emp.lastName}`}
+                            aria-label={`Delete ${emp.first_name} ${emp.last_name}`}
                           >
                             <FiTrash2 className="mr-1" /> Delete
                           </button>
@@ -583,12 +823,14 @@ function EmployeeDashboard() {
             <div className="flex flex-wrap justify-between items-center mt-6">
               <p className="text-sm text-gray-600">
                 Showing {(currentPage - 1) * rowsPerPage + 1} to{" "}
-                {Math.min(currentPage * rowsPerPage, filteredEmployees.length)} of{" "}
-                {filteredEmployees.length} employees
+                {Math.min(currentPage * rowsPerPage, filteredEmployees.length)}{" "}
+                of {filteredEmployees.length} employees
               </p>
               <div className="flex space-x-1">
                 <button
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
                   disabled={currentPage === 1}
                   className="px-3 py-1 text-sm rounded border hover:bg-gray-100 disabled:opacity-50"
                   aria-label="Previous page"
@@ -600,7 +842,9 @@ function EmployeeDashboard() {
                     key={i}
                     onClick={() => setCurrentPage(i + 1)}
                     className={`px-3 py-1 text-sm rounded border ${
-                      currentPage === i + 1 ? "bg-blue-600 text-white" : "hover:bg-gray-100"
+                      currentPage === i + 1
+                        ? "bg-blue-600 text-white"
+                        : "hover:bg-gray-100"
                     }`}
                     aria-label={`Page ${i + 1}`}
                     aria-current={currentPage === i + 1 ? "page" : undefined}
@@ -609,7 +853,9 @@ function EmployeeDashboard() {
                   </button>
                 ))}
                 <button
-                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
                   disabled={currentPage === totalPages}
                   className="px-3 py-1 text-sm rounded border hover:bg-gray-100 disabled:opacity-50"
                   aria-label="Next page"
@@ -634,25 +880,40 @@ function EmployeeDashboard() {
               <FiPlus /> Add New Department
             </button>
           </div>
-          <p className="mb-4">Manage organisation departments and their details.</p>
+          <p className="mb-4">
+            Manage organisation departments and their details.
+          </p>
           {departments.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">No departments found.</p>
+            <p className="text-gray-500 text-center py-4">
+              No departments found.
+            </p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {departments.map((dept) => (
-                <div key={dept.id} className="bg-white shadow rounded-lg p-4 border">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">{dept.name}</h3>
+                <div
+                  key={dept.id}
+                  className="bg-white shadow rounded-lg p-4 border"
+                >
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    {dept.name}
+                  </h3>
                   <div className="text-sm text-gray-600 mb-1">
-                    <span className="font-medium text-gray-700">Location:</span> {dept.location}
+                    <span className="font-medium text-gray-700">Location:</span>{" "}
+                    {dept.location}
                   </div>
                   <div className="text-sm text-gray-600 mb-4 flex items-center">
-                    <span className="font-medium text-gray-700 mr-2">Manager:</span>
+                    <span className="font-medium text-gray-700 mr-2">
+                      Manager:
+                    </span>
                     <img
-                      src={dept.manager.picture}
-                      alt={`${dept.manager.firstName} ${dept.manager.lastName}'s profile`}
+                      key={dept.manager?.employee_id || dept.id} // fallback key if no manager
+                      src={dept.manager?.picture || "/default-avatar.png"}
+                      alt={`${dept.manager?.first_name || "Unknown"} ${
+                        dept.manager?.last_name || ""
+                      }'s profile`}
                       className="h-12 w-12 rounded-full object-cover mr-2"
                     />
-                    {dept.manager.firstName} {dept.manager.lastName}
+                    {/* {dept.manager.first_name} {dept.manager.last_name} */}
                   </div>
                   <button
                     onClick={() => handleViewDepartmentDetails(dept)}
@@ -687,34 +948,61 @@ function EmployeeDashboard() {
               ×
             </button>
             {showSuccess ? (
-              <EmployeeDetails employee={lastSavedEmployee} onClose={handleCloseModal} />
+              <EmployeeDetails
+                employee={lastSavedEmployee}
+                onClose={handleCloseModal}
+              />
             ) : (
               <form onSubmit={handleAddEmployee} className="space-y-4">
                 <h2 className="text-black font-bold text-md">
                   {editingEmployee ? "Edit Employee" : "Add New Employee"}
                 </h2>
                 <p className="text-gray-500 font-light text-sm mb-8">
-                  {editingEmployee ? "Update employee information" : "Enter employee information to create a new record"}
+                  {editingEmployee
+                    ? "Update employee information"
+                    : "Enter employee information to create a new record"}
                 </p>
                 {[
                   { label: "First Name", name: "firstName", type: "text" },
                   { label: "Last Name", name: "lastName", type: "text" },
-                  { label: "Gender", name: "gender", type: "select", options: ["", "Male", "Female", "Other"] },
+                  {
+                    label: "Gender",
+                    name: "gender",
+                    type: "select",
+                    options: ["", "Male", "Female", "Other"],
+                  },
                   { label: "Date of Birth", name: "dateOfBirth", type: "date" },
                   { label: "Email", name: "email", type: "email" },
                   { label: "Phone Number", name: "phone", type: "tel" },
                   { label: "Address", name: "address", type: "text" },
                   { label: "Hire Date", name: "hireDate", type: "date" },
                   { label: "Job Title", name: "jobTitle", type: "text" },
-                  { label: "Department", name: "department", type: "select", options: ["", ...departments.map((dept) => dept.name)] },
-                  { label: "Employment Status", name: "employmentStatus", type: "select", options: ["Active", "Inactive"] },
-                  { label: "Bank Account Number", name: "bankAccountNumber", type: "text" },
+                  {
+                    label: "Department",
+                    name: "department",
+                    type: "select",
+                    options: ["", ...departments.map((dept) => dept.name)],
+                  },
+                  {
+                    label: "Employment Status",
+                    name: "employmentStatus",
+                    type: "select",
+                    options: ["Active", "Inactive"],
+                  },
+                  {
+                    label: "Bank Account Number",
+                    name: "bankAccountNumber",
+                    type: "text",
+                  },
                   { label: "Bank Name", name: "bankName", type: "text" },
                   { label: "Tax ID", name: "taxId", type: "text" },
                   { label: "National ID", name: "nationalId", type: "text" },
                 ].map(({ label, name, type, options }) => (
                   <div key={name}>
-                    <label htmlFor={name} className="block text-sm font-light text-black mb-1">
+                    <label
+                      htmlFor={name}
+                      className="block text-sm font-light text-black mb-1"
+                    >
                       {label}
                     </label>
                     {type === "select" ? (
@@ -727,7 +1015,11 @@ function EmployeeDashboard() {
                         className="w-full px-3 py-2 border rounded text-sm text-gray-700"
                       >
                         {options.map((option) => (
-                          <option key={option} value={option} disabled={option === ""}>
+                          <option
+                            key={option}
+                            value={option}
+                            disabled={option === ""}
+                          >
                             {option || `Select ${label}`}
                           </option>
                         ))}
@@ -779,12 +1071,17 @@ function EmployeeDashboard() {
               ×
             </button>
             <form onSubmit={handleAddDepartment} className="space-y-4">
-              <h2 className="text-black font-bold text-md">Add New Department</h2>
+              <h2 className="text-black font-bold text-md">
+                Add New Department
+              </h2>
               <p className="text-gray-500 font-light text-sm mb-8">
                 Enter department information to create a new record
               </p>
               <div>
-                <label htmlFor="name" className="block text-sm font-light text-black mb-1">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-light text-black mb-1"
+                >
                   Department Name
                 </label>
                 <input
@@ -799,7 +1096,10 @@ function EmployeeDashboard() {
                 />
               </div>
               <div>
-                <label htmlFor="location" className="block text-sm font-light text-black mb-1">
+                <label
+                  htmlFor="location"
+                  className="block text-sm font-light text-black mb-1"
+                >
                   Location
                 </label>
                 <input
@@ -814,7 +1114,10 @@ function EmployeeDashboard() {
                 />
               </div>
               <div>
-                <label htmlFor="manager" className="block text-sm font-light text-black mb-1">
+                <label
+                  htmlFor="manager"
+                  className="block text-sm font-light text-black mb-1"
+                >
                   Manager
                 </label>
                 <select
@@ -829,7 +1132,10 @@ function EmployeeDashboard() {
                     Select Manager
                   </option>
                   {employees.map((emp) => (
-                    <option key={emp.id} value={`${emp.firstName} ${emp.lastName}`}>
+                    <option
+                      key={emp.id}
+                      value={`${emp.firstName} ${emp.lastName}`}
+                    >
                       {emp.firstName} {emp.lastName}
                     </option>
                   ))}
