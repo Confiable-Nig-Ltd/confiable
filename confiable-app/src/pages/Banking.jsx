@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import PurchaseOrderTable from "../components/banking/PurchaseOrderTable";
 import StockTransactionTable from "../components/banking/StockTransactionTable";
+import SalesOrderTable from "../components/banking/SalesOrderTable";
 
 const Card = ({
   title,
@@ -105,6 +106,7 @@ const TransactionTabs = () => {
       <div className="mt-6">
         {activeTab === "Purchase Order" && <PurchaseOrderTable />}
         {activeTab === "Stock Transaction" && <StockTransactionTable />}
+        {activeTab === "Sales Order" && <SalesOrderTable />}
       </div>
     </>
   );
