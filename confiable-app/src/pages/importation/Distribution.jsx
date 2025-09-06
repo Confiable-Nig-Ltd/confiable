@@ -36,6 +36,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Search, Share2, Plus, Trash2, Package } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import DistributionDetailsDialog from "@/src/components/importation/DistributionDetailsDialog";
 
 export default function DistributionPage() {
   const { containers } = useContainerStore();
@@ -50,6 +51,8 @@ export default function DistributionPage() {
   ]);
   const [notes, setNotes] = useState("");
   const [isHydrated, setIsHydrated] = useState(false);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [selectedDistribution, setSelectedDistribution] = useState(null);
 
   useEffect(() => {
     setIsHydrated(true);
@@ -585,7 +588,14 @@ export default function DistributionPage() {
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Button variant="ghost" size="sm">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedDistribution(distribution);
+                            setDetailsDialogOpen(true);
+                          }}
+                        >
                           View Details
                         </Button>
                       </TableCell>
@@ -597,6 +607,13 @@ export default function DistributionPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Distribution Details Dialog */}
+      <DistributionDetailsDialog
+        open={detailsDialogOpen}
+        onOpenChange={setDetailsDialogOpen}
+        distribution={selectedDistribution}
+      />
     </div>
   );
 }
