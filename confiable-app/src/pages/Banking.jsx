@@ -3,6 +3,7 @@ import { TrendingDown, TrendingUp } from "lucide-react";
 import PurchaseOrderTable from "../components/banking/PurchaseOrderTable";
 import StockTransactionTable from "../components/banking/StockTransactionTable";
 import SalesOrderTable from "../components/banking/SalesOrderTable";
+import AccountTable from "../components/banking/AccountTable";
 
 const Card = ({
   title,
@@ -107,6 +108,7 @@ const TransactionTabs = () => {
         {activeTab === "Purchase Order" && <PurchaseOrderTable />}
         {activeTab === "Stock Transaction" && <StockTransactionTable />}
         {activeTab === "Sales Order" && <SalesOrderTable />}
+        {activeTab === "Account" && <AccountTable />}
       </div>
     </>
   );
