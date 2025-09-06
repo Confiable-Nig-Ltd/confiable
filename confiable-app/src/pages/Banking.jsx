@@ -1,14 +1,26 @@
 import React, { useState } from "react";
 import { TrendingDown, TrendingUp } from "lucide-react";
+import PurchaseOrderTable from "../components/banking/PurchaseOrderTable";
 
-const Card = ({ title, count, growth, growthColor, action, icon: Icon, iconColor }) => (
+const Card = ({
+  title,
+  count,
+  growth,
+  growthColor,
+  action,
+  icon: Icon,
+  iconColor,
+}) => (
   <div className="bg-white rounded-2xl shadow-md p-3 w-full flex flex-col">
     <div className="flex justify-between items-start mb-4">
       <div>
         <h2 className="text-gray-500 text-sm font-medium">{title}</h2>
         <div className="text-3xl font-bold text-gray-800">{count}</div>
       </div>
-      <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-opacity-10`} style={{ backgroundColor: `${iconColor}20` }}>
+      <div
+        className={`w-10 h-10 rounded-full flex items-center justify-center bg-opacity-10`}
+        style={{ backgroundColor: `${iconColor}20` }}
+      >
         {Icon && <Icon className="text-xl" color={iconColor} />}
       </div>
     </div>
@@ -41,21 +53,25 @@ const TransactionTabs = () => {
         {/* Tabs */}
         <div className="bg-white border rounded-lg p-4">
           <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
-            {["Purchase Order", "Stock Transaction", "Sales Order", "Account", "Customer"].map(
-              (tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2 rounded-xl text-sm transition ${
-                    activeTab === tab
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 hover:bg-blue-600 hover:text-white"
-                  }`}
-                >
-                  {tab}
-                </button>
-              )
-            )}
+            {[
+              "Purchase Order",
+              "Stock Transaction",
+              "Sales Order",
+              "Account",
+              "Customer",
+            ].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-2 rounded-xl text-sm transition ${
+                  activeTab === tab
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 hover:bg-blue-600 hover:text-white"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -82,15 +98,14 @@ const TransactionTabs = () => {
           icon={TrendingDown}
           iconColor="red"
         />
-        <Card
-          title="Cash Flows"
-          count="17"
-          
-        />
+        <Card title="Cash Flows" count="17" />
+      </div>
+
+      <div className="mt-6">
+        {activeTab === "Purchase Order" && <PurchaseOrderTable />}
       </div>
     </>
   );
 };
 
 export default TransactionTabs;
-
