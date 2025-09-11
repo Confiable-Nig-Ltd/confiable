@@ -9,7 +9,7 @@ const DeviceManagementTable = ({ devices, onLogoutDevice, setSuccess, setError }
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold text-gray-700 mb-4">Manage Logged Devices</h2>
+      <h2 className="text-xl font-semibold italic text-gray-700 mb-4">Manage Logged Devices</h2>
       {devices.length === 0 ? (
         <p className="text-gray-500">No devices currently logged in.</p>
       ) : (

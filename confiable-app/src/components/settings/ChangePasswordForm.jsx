@@ -41,7 +41,7 @@ const ChangePasswordForm = ({ setError, setSuccess }) => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-      <h2 className="text-xl font-semibold text-gray-700 mb-4">Change Password</h2>
+      <h2 className="text-xl font-semibold italic text-gray-700 mb-4">Change Password</h2>
       <div className="space-y-4">
         <div>
           <label className="block text-gray-600 mb-1" htmlFor="currentPassword">
