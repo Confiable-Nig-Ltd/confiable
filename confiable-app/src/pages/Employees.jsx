@@ -562,7 +562,7 @@ function EmployeeDashboard() {
   }, [employees, departments]);
 
   return (
-    <div className="p-4 bg-indigo-900">
+    <div className="p-4 bg-blue-500">
       <section className="bg-white border rounded-lg mb-6 p-4">
         <label htmlFor="search" className="sr-only">
           Search employees

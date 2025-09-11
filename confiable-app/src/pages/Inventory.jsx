@@ -1250,7 +1250,7 @@ const EmployeeOverview = () => {
   };
 
   return (
-    <div className="p-2 sm:p-4 bg-indigo-900">
+    <div className="p-2 sm:p-4 bg-blue-500">
       <div className="bg-white border rounded-lg p-4 mb-6">
         <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
           {["overview", "products", "inventory", "warehouse", "supplier"].map((tab) => (

@@ -41,7 +41,7 @@ const TransactionTabs = () => {
 
   return (
     <>
-      <div className="p-4 rounded-xl shadow-md bg-indigo-700">
+      <div className="p-4 rounded-xl shadow-md bg-white">
         {/* Search bar */}
         <div className="p-4 bg-white border rounded-lg mb-6 mt-2">
           <input
