@@ -1,9 +1,12 @@
 import { create } from "zustand";
 import { PurchaseOrder as initialPurchaseOrders } from "@/src/data/purchaseOrderData";
+import { StockTransaction as initialStockTransactions } from "@/src/data/stockTransactionData";
 
 const useBankingStore = create((set) => ({
   purchaseOrders: initialPurchaseOrders,
+  stockTransactions: initialStockTransactions,
   isAddingPurchaseOrder: false,
+  isAddingStockTransaction: false,
 
   addPurchaseOrder: async (orderData) => {
     try {
@@ -28,6 +31,33 @@ const useBankingStore = create((set) => ({
       return { success: false, error: error.message };
     } finally {
       set({ isAddingPurchaseOrder: false });
+    }
+  },
+
+  addStockTransaction: async (transactionData) => {
+    try {
+      set({ isAddingStockTransaction: true });
+
+      // Create a new stock transaction with the next available ID
+      const newTransaction = {
+        ...transactionData,
+        transaction_id:
+          Math.max(...initialStockTransactions.map((st) => st.transaction_id)) +
+          1,
+        quantity: parseInt(transactionData.quantity),
+        performed_by: parseInt(transactionData.performed_by),
+      };
+
+      // Update the store with the new stock transaction
+      set((state) => ({
+        stockTransactions: [...state.stockTransactions, newTransaction],
+      }));
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    } finally {
+      set({ isAddingStockTransaction: false });
     }
   },
 }));
