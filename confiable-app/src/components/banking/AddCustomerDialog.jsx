@@ -79,7 +79,7 @@ export function AddCustomerDialog({ open, onClose }) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="sm:max-w-[525px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">Add Customer</DialogTitle>
           <p className="text-sm text-gray-500">
