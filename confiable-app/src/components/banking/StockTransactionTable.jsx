@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Plus } from "lucide-react";
+// import { toast } from "sonner";
+import useBankingStore from "@/stores/banking-store";
+import { AddStockTransactionDialog } from "./AddStockTransactionDialog";
 import {
   Table,
   TableBody,
@@ -20,7 +24,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Plus } from "lucide-react";
+// import { Plus } from "lucide-react";
 import { StockTransaction } from "@/src/data/stockTransactionData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -49,12 +53,15 @@ const getTransactionTypeVariant = (type) => {
 
 export default function StockTransactionTable() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const itemsPerPage = 6;
 
-  const totalPages = Math.ceil(StockTransaction.length / itemsPerPage);
+  const { stockTransactions } = useBankingStore();
+
+  const totalPages = Math.ceil(stockTransactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentData = StockTransaction.slice(startIndex, endIndex);
+  const currentData = stockTransactions.slice(startIndex, endIndex);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -142,11 +149,18 @@ export default function StockTransactionTable() {
     <Card className="w-full shadow-md">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7">
         <CardTitle className="text-2xl font-bold">Stock Transaction</CardTitle>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Button
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+          onClick={() => setIsDialogOpen(true)}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Add Stock Transaction
         </Button>
       </CardHeader>
+      <AddStockTransactionDialog
+        open={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+      />
       <CardContent>
         <Table>
           <TableHeader>

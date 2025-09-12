@@ -21,8 +21,9 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Plus } from "lucide-react";
-import { Customers } from "@/src/data/customerData";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import useBankingStore from "@/stores/banking-store";
+import { AddCustomerDialog } from "./AddCustomerDialog";
 
 // Format amount with commas
 const formatAmount = (amount) => {
@@ -42,12 +43,14 @@ const getStatusVariant = (status) => {
 
 export default function CustomerTable() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { customers } = useBankingStore();
   const itemsPerPage = 6;
 
-  const totalPages = Math.ceil(Customers.length / itemsPerPage);
+  const totalPages = Math.ceil(customers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentData = Customers.slice(startIndex, endIndex);
+  const currentData = customers.slice(startIndex, endIndex);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -109,7 +112,6 @@ export default function CustomerTable() {
       );
     }
 
-    // Always show last page if there's more than one page
     if (totalPages > 1) {
       items.push(
         <PaginationItem key={totalPages}>
@@ -132,18 +134,21 @@ export default function CustomerTable() {
   };
 
   return (
-    <Card className="w-full shadow-md">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7">
-        <CardTitle className="text-2xl font-bold">Customer</CardTitle>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Customer
+    <Card className="w-full p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">Customers</h2>
+        <Button
+          onClick={() => setIsDialogOpen(true)}
+          className="flex items-center"
+        >
+          <Plus className="w-5 h-5 mr-2" /> Add Customer
         </Button>
-      </CardHeader>
-      <CardContent>
+      </div>
+
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
-            <TableRow className="border-b">
+            <TableRow>
               <TableHead className="font-medium text-gray-700 py-4">
                 Name
               </TableHead>
@@ -172,10 +177,7 @@ export default function CustomerTable() {
           </TableHeader>
           <TableBody>
             {currentData.map((customer) => (
-              <TableRow
-                key={customer.customer_id}
-                className="border-b last:border-b-0"
-              >
+              <TableRow key={customer.id} className="border-b last:border-b-0">
                 <TableCell className="py-4 font-medium text-gray-900">
                   {customer.name}
                 </TableCell>
@@ -211,40 +213,44 @@ export default function CustomerTable() {
             ))}
           </TableBody>
         </Table>
+      </div>
 
-        {/* Pagination */}
-        <div className="mt-6">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                  className={
-                    currentPage === 1
-                      ? "pointer-events-none opacity-50"
-                      : "cursor-pointer"
-                  }
-                />
-              </PaginationItem>
+      <div className="mt-6">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                className={
+                  currentPage === 1
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+              />
+            </PaginationItem>
 
-              {renderPaginationItems()}
+            {renderPaginationItems()}
 
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() =>
-                    handlePageChange(Math.min(totalPages, currentPage + 1))
-                  }
-                  className={
-                    currentPage === totalPages
-                      ? "pointer-events-none opacity-50"
-                      : "cursor-pointer"
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
-      </CardContent>
+            <PaginationItem>
+              <PaginationNext
+                onClick={() =>
+                  handlePageChange(Math.min(totalPages, currentPage + 1))
+                }
+                className={
+                  currentPage === totalPages
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
+
+      <AddCustomerDialog
+        open={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+      />
     </Card>
   );
 }

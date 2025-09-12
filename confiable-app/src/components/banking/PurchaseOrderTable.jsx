@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+// import { toast } from "sonner";
 import {
   Table,
   TableBody,
@@ -11,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AddPurchaseOrderDialog } from "./AddPurchaseOrderDialog";
 
 import {
   Pagination,
@@ -22,8 +24,8 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Plus } from "lucide-react";
-import { PurchaseOrder } from "@/src/data/purchaseOrderData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import useBankingStore from "@/stores/banking-store";
 
 // Format date to DD/MM/YYYY
 const formatDate = (dateString) => {
@@ -59,12 +61,15 @@ const getStatusVariant = (status) => {
 
 export default function PurchaseOrdersPage() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const itemsPerPage = 6;
 
-  const totalPages = Math.ceil(PurchaseOrder.length / itemsPerPage);
+  const { purchaseOrders } = useBankingStore();
+
+  const totalPages = Math.ceil(purchaseOrders.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentData = PurchaseOrder.slice(startIndex, endIndex);
+  const currentData = purchaseOrders.slice(startIndex, endIndex);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -153,11 +158,18 @@ export default function PurchaseOrdersPage() {
     <Card className="w-full shadow-md">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7">
         <CardTitle className="text-2xl font-bold">Purchase Order</CardTitle>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Button
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+          onClick={() => setIsDialogOpen(true)}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Add Purchase Order
         </Button>
       </CardHeader>
+      <AddPurchaseOrderDialog
+        open={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+      />
       <CardContent>
         <Table>
           <TableHeader>
