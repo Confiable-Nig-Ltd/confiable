@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+// import { toast } from "sonner";
+import useBankingStore from "@/src/stores/banking/banking-store";
+import { AddSalesOrderDialog } from "./AddSalesOrderDialog";
 import {
   Table,
   TableBody,
@@ -21,7 +24,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Plus } from "lucide-react";
-import { salesOrder } from "@/src/data/salesOrderData";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Format date to DD-MM-YYYY
@@ -69,12 +72,15 @@ const getPaymentStatusVariant = (status) => {
 
 export default function SalesOrderTable() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const itemsPerPage = 6;
 
-  const totalPages = Math.ceil(salesOrder.length / itemsPerPage);
+  const { salesOrders } = useBankingStore();
+
+  const totalPages = Math.ceil(salesOrders.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentData = salesOrder.slice(startIndex, endIndex);
+  const currentData = salesOrders.slice(startIndex, endIndex);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -162,11 +168,18 @@ export default function SalesOrderTable() {
     <Card className="w-full shadow-md">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7">
         <CardTitle className="text-2xl font-bold">Sales Order</CardTitle>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Button
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+          onClick={() => setIsDialogOpen(true)}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Add Sales Order
         </Button>
       </CardHeader>
+      <AddSalesOrderDialog
+        open={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+      />
       <CardContent>
         <Table>
           <TableHeader>

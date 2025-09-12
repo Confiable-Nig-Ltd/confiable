@@ -1,12 +1,15 @@
 import { create } from "zustand";
 import { PurchaseOrder as initialPurchaseOrders } from "@/src/data/purchaseOrderData";
 import { StockTransaction as initialStockTransactions } from "@/src/data/stockTransactionData";
+import { salesOrder as initialSalesOrders } from "@/src/data/salesOrderData";
 
 const useBankingStore = create((set) => ({
   purchaseOrders: initialPurchaseOrders,
   stockTransactions: initialStockTransactions,
+  salesOrders: initialSalesOrders,
   isAddingPurchaseOrder: false,
   isAddingStockTransaction: false,
+  isAddingSalesOrder: false,
 
   addPurchaseOrder: async (orderData) => {
     try {
@@ -58,6 +61,32 @@ const useBankingStore = create((set) => ({
       return { success: false, error: error.message };
     } finally {
       set({ isAddingStockTransaction: false });
+    }
+  },
+
+  addSalesOrder: async (orderData) => {
+    try {
+      set({ isAddingSalesOrder: true });
+
+      // Create a new sales order with the next available ID
+      const newSalesOrder = {
+        ...orderData,
+        so_id: Math.max(...initialSalesOrders.map((so) => so.so_id)) + 1,
+        total_amount: parseFloat(orderData.total_amount),
+        customer_id: parseInt(orderData.customer_id),
+        created_by: parseInt(orderData.created_by),
+      };
+
+      // Update the store with the new sales order
+      set((state) => ({
+        salesOrders: [...state.salesOrders, newSalesOrder],
+      }));
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    } finally {
+      set({ isAddingSalesOrder: false });
     }
   },
 }));
