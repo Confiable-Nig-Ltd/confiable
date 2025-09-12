@@ -2,14 +2,17 @@ import { create } from "zustand";
 import { PurchaseOrder as initialPurchaseOrders } from "@/src/data/purchaseOrderData";
 import { StockTransaction as initialStockTransactions } from "@/src/data/stockTransactionData";
 import { salesOrder as initialSalesOrders } from "@/src/data/salesOrderData";
+import { Accounts as initialAccounts } from "@/src/data/accountData";
 
 const useBankingStore = create((set) => ({
   purchaseOrders: initialPurchaseOrders,
   stockTransactions: initialStockTransactions,
   salesOrders: initialSalesOrders,
+  accounts: initialAccounts,
   isAddingPurchaseOrder: false,
   isAddingStockTransaction: false,
   isAddingSalesOrder: false,
+  isAddingAccount: false,
 
   addPurchaseOrder: async (orderData) => {
     try {
@@ -87,6 +90,39 @@ const useBankingStore = create((set) => ({
       return { success: false, error: error.message };
     } finally {
       set({ isAddingSalesOrder: false });
+    }
+  },
+
+  addAccount: async (accountData) => {
+    try {
+      set({ isAddingAccount: true });
+
+      // Create a new account with the next available ID and account code
+      const nextId =
+        Math.max(...initialAccounts.map((acc) => acc.account_id)) + 1;
+      const accountCode = `A-${String(nextId).padStart(4, "0")}`;
+
+      const newAccount = {
+        ...accountData,
+        account_id: nextId,
+        account_code: accountCode,
+        parent_account_id:
+          accountData.parent_account_id && accountData.parent_account_id !== "0"
+            ? parseInt(accountData.parent_account_id)
+            : null,
+        is_active: accountData.status === "Active",
+      };
+
+      // Update the store with the new account
+      set((state) => ({
+        accounts: [...state.accounts, newAccount],
+      }));
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    } finally {
+      set({ isAddingAccount: false });
     }
   },
 }));
