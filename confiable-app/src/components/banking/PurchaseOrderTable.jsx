@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/pagination";
 import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import useBankingStore from "@/src/stores/banking/banking-store";
+import useBankingStore from "@/stores/banking-store";
 
 // Format date to DD/MM/YYYY
 const formatDate = (dateString) => {

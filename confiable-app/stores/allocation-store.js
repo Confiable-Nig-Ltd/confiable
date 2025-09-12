@@ -1,5 +1,5 @@
-import { create } from "zustand"
-import { persist } from "zustand/middleware"
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 export const useAllocationStore = create(
   persist(
     (set, get) => ({
@@ -17,47 +17,55 @@ export const useAllocationStore = create(
           id: globalThis.crypto.randomUUID(),
           allocationDate: new Date().toISOString(),
           status: "active",
-        }
+        };
 
         // Update employee stock
         set((state) => {
           const updatedEmployees = state.employees.map((emp) =>
             emp.id === allocation.employeeId
-              ? { ...emp, currentStock: emp.currentStock + allocation.balesAllocated }
-              : emp,
-          )
+              ? {
+                  ...emp,
+                  currentStock: emp.currentStock + allocation.balesAllocated,
+                }
+              : emp
+          );
 
           return {
             allocations: [...state.allocations, newAllocation],
             employees: updatedEmployees,
-          }
-        })
+          };
+        });
       },
 
       reverseAllocation: (allocationId) => {
-        const allocation = get().allocations.find((a) => a.id === allocationId)
-        if (!allocation) return
+        const allocation = get().allocations.find((a) => a.id === allocationId);
+        if (!allocation) return;
 
         set((state) => ({
-          allocations: state.allocations.map((a) => (a.id === allocationId ? { ...a, status: "reversed" } : a)),
+          allocations: state.allocations.map((a) =>
+            a.id === allocationId ? { ...a, status: "reversed" } : a
+          ),
           employees: state.employees.map((emp) =>
             emp.id === allocation.employeeId
-              ? { ...emp, currentStock: emp.currentStock - allocation.balesAllocated }
-              : emp,
+              ? {
+                  ...emp,
+                  currentStock: emp.currentStock - allocation.balesAllocated,
+                }
+              : emp
           ),
-        }))
+        }));
       },
 
       getEmployeeById: (id) => {
-        return get().employees.find((emp) => emp.id === id)
+        return get().employees.find((emp) => emp.id === id);
       },
 
       getActiveAllocations: () => {
-        return get().allocations.filter((a) => a.status === "active")
+        return get().allocations.filter((a) => a.status === "active");
       },
     }),
     {
       name: "allocation-storage",
-    },
-  ),
-)
+    }
+  )
+);

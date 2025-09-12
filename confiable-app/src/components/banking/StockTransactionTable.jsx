@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
 // import { toast } from "sonner";
-import useBankingStore from "@/src/stores/banking/banking-store";
+import useBankingStore from "@/stores/banking-store";
 import { AddStockTransactionDialog } from "./AddStockTransactionDialog";
 import {
   Table,

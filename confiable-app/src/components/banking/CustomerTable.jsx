@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/pagination";
 import { Plus } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import useBankingStore from "@/src/stores/banking/banking-store";
+import useBankingStore from "@/stores/banking-store";
 import { AddCustomerDialog } from "./AddCustomerDialog";
 
 // Format amount with commas

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 // import { toast } from "sonner";
-import useBankingStore from "@/src/stores/banking/banking-store";
+import useBankingStore from "@/stores/banking-store";
 import { AddSalesOrderDialog } from "./AddSalesOrderDialog";
 import {
   Table,
