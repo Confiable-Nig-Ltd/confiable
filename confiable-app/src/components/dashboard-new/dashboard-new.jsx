@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   TrendingUp,
@@ -11,6 +11,12 @@ import {
   Calendar,
   Banknote,
 } from "lucide-react";
+import { salesOrder } from "@/src/data/salesOrderData";
+import { PurchaseOrder } from "@/src/data/purchaseOrderData";
+import { Accounts } from "@/src/data/accountData";
+import { ledgerEntry } from "@/src/data/ledgerEntry";
+import { Customers } from "@/src/data/customerData";
+import { Suppliers } from "@/src/data/supplierData";
 import MetricCard from "./metric-card";
 import ExpenseBreakdown from "./expense-breakdown";
 import InvoiceTable from "./invoice-table";
@@ -20,11 +26,134 @@ import RevenueChart from "./revenue-chart";
 export default function DashboardNew() {
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [selectedMonth, setSelectedMonth] = useState("January 2025");
+  const [metrics, setMetrics] = useState({});
+  const [expenseData, setExpenseData] = useState({});
+  const [invoices, setInvoices] = useState([]);
+  const [revenueData, setRevenueData] = useState([]);
+  const [payables, setPayables] = useState([]);
+
+  const calculateMetrics = () => {
+    // Total Revenue
+    const totalRevenue = salesOrder.reduce(
+      (sum, order) => sum + parseFloat(order.total_amount),
+      0
+    );
+
+    // Total Expenses
+    const totalExpenses = PurchaseOrder.reduce(
+      (sum, order) => sum + parseFloat(order.total_amount),
+      0
+    );
+
+    // Net Profit
+    const netProfit = totalRevenue - totalExpenses;
+
+    // Bank Balance
+    const bankBalance = Accounts.reduce(
+      (sum, account) => sum + parseFloat(account.balance),
+      0
+    );
+
+    // Outstanding Invoices
+    const pendingInvoices = salesOrder.filter(
+      (order) => order.status === "pending" || order.status === "unpaid"
+    );
+    const outstandingAmount = pendingInvoices.reduce(
+      (sum, invoice) => sum + parseFloat(invoice.total_amount),
+      0
+    );
+
+    // Upcoming Payables
+    const unpaidPurchases = PurchaseOrder.filter(
+      (order) => order.status === "pending" || order.status === "unpaid"
+    );
+    const payablesAmount = unpaidPurchases.reduce(
+      (sum, bill) => sum + parseFloat(bill.total_amount),
+      0
+    );
+
+    return {
+      totalRevenue,
+      totalExpenses,
+      netProfit,
+      bankBalance,
+      outstandingAmount,
+      payablesAmount,
+      pendingInvoicesCount: pendingInvoices.length,
+      unpaidPurchasesCount: unpaidPurchases.length,
+    };
+  };
+
+  const getExpenseBreakdown = () => {
+    return ledgerEntry
+      .filter((entry) => entry.type === "expense")
+      .reduce((acc, entry) => {
+        acc[entry.category] =
+          (acc[entry.category] || 0) + parseFloat(entry.amount);
+        return acc;
+      }, {});
+  };
+
+  const getInvoiceData = () => {
+    return salesOrder.map((invoice) => ({
+      ...invoice,
+      customerName: Customers.find((c) => c.id === invoice.customer_id)?.name,
+      status: invoice.status,
+      dueDate: invoice.due_date,
+      amount: invoice.total_amount,
+    }));
+  };
+
+  const getRevenueData = (period = "monthly") => {
+    const revenueByPeriod = salesOrder.reduce((acc, order) => {
+      const date = new Date(order.date);
+      const key =
+        period === "monthly"
+          ? `${date.getMonth() + 1}/${date.getFullYear()}`
+          : date.getFullYear().toString();
+
+      acc[key] = (acc[key] || 0) + parseFloat(order.total_amount);
+      return acc;
+    }, {});
+
+    return Object.entries(revenueByPeriod).map(([period, amount]) => ({
+      period,
+      amount,
+    }));
+  };
+
+  const getPayablesData = () => {
+    return PurchaseOrder.filter(
+      (order) => order.status === "pending" || order.status === "unpaid"
+    ).map((payable) => ({
+      ...payable,
+      supplierName: Suppliers.find((s) => s.id === payable.supplier_id)?.name,
+      status: payable.status,
+      dueDate: payable.due_date,
+      amount: payable.total_amount,
+    }));
+  };
+
+  useEffect(() => {
+    const calculatedMetrics = calculateMetrics();
+    setMetrics(calculatedMetrics);
+    setExpenseData(getExpenseBreakdown());
+    setInvoices(getInvoiceData());
+    setRevenueData(getRevenueData(timePeriod.toLowerCase()));
+    setPayables(getPayablesData());
+  }, [timePeriod, selectedMonth]);
+
+  const formatCurrency = (amount) => {
+    return `₦ ${amount.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  };
 
   const metricsData = [
     {
       title: "TOTAL REVENUE",
-      value: "₦ 5,450,000.00",
+      value: formatCurrency(metrics.totalRevenue || 0),
       change: "23%",
       changeText: "from last month",
       trend: "up",
@@ -34,7 +163,7 @@ export default function DashboardNew() {
     },
     {
       title: "TOTAL EXPENSES",
-      value: "₦ 4,500,000.00",
+      value: formatCurrency(metrics.totalExpenses || 0),
       change: "23%",
       changeText: "from last month",
       trend: "up",
@@ -44,8 +173,12 @@ export default function DashboardNew() {
     },
     {
       title: "NET PROFIT",
-      value: "₦ 10,450,000.00",
-      change: "23%",
+      value: formatCurrency(metrics.netProfit || 0),
+      change:
+        (
+          ((metrics.netProfit || 0) / (metrics.totalRevenue || 1)) *
+          100
+        ).toFixed(1) + "%",
       changeText: "Margin",
       trend: "up",
       icon: TrendingUp,
@@ -54,7 +187,7 @@ export default function DashboardNew() {
     },
     {
       title: "BANK BALANCE",
-      value: "₦ 99,450,000.00",
+      value: formatCurrency(metrics.bankBalance || 0),
       change: null,
       changeText: "Available Cash",
       trend: null,
@@ -67,7 +200,7 @@ export default function DashboardNew() {
   const secondaryMetrics = [
     {
       title: "CASH FLOW",
-      value: "₦ 4,500,000.00",
+      value: formatCurrency(metrics.totalRevenue || 0),
       change: "23%",
       changeText: "Revenue + Collection",
       trend: "up",
@@ -77,9 +210,9 @@ export default function DashboardNew() {
     },
     {
       title: "OUTSTANDING INVOICES",
-      value: "₦ 15,000,000.00",
+      value: formatCurrency(metrics.outstandingAmount || 0),
       change: null,
-      changeText: "6 Invoices Pending",
+      changeText: `${metrics.pendingInvoicesCount || 0} Invoices Pending`,
       trend: null,
       icon: FileText,
       bgColor: "bg-orange-50",
@@ -87,9 +220,9 @@ export default function DashboardNew() {
     },
     {
       title: "UPCOMING PAYABLES",
-      value: "₦ 15,000,000.00",
+      value: formatCurrency(metrics.payablesAmount || 0),
       change: null,
-      changeText: "4 Bills to pay",
+      changeText: `${metrics.unpaidPurchasesCount || 0} Bills to pay`,
       trend: null,
       icon: Calendar,
       bgColor: "bg-pink-50",
@@ -161,14 +294,14 @@ export default function DashboardNew() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left Column */}
           <div className="space-y-6">
-            <ExpenseBreakdown />
-            <InvoiceTable />
+            <ExpenseBreakdown data={expenseData} />
+            <InvoiceTable data={invoices} />
           </div>
 
           {/* Right Column */}
           <div className="space-y-6">
-            <RevenueChart />
-            <PayablesTable />
+            <RevenueChart data={revenueData} timePeriod={timePeriod} />
+            <PayablesTable data={payables} />
           </div>
         </div>
       </div>
