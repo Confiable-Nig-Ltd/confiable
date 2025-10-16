@@ -79,6 +79,11 @@ export const navSetting = [
         text: "Dollar Tracker",
         icon: <BsCurrencyDollar />,
       },
+      {
+        path: "/importation/clearing",
+        text: "Clearing",
+        icon: <TbTruckDelivery />,
+      },
     ],
   },
   {

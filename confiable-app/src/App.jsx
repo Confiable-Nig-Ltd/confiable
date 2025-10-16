@@ -23,6 +23,7 @@ import VesselImports from "./pages/importation/VesselImports";
 import Allocation from "./pages/importation/Allocation";
 import Distribution from "./pages/importation/Distribution";
 import DollarTracker from "./pages/importation/DollarTracker";
+import Clearing from "./pages/importation/Clearing";
 
 export default function App() {
   return (
@@ -134,6 +135,14 @@ export default function App() {
             element={
               <Protected>
                 <DollarTracker />
+              </Protected>
+            }
+          />
+          <Route
+            path="/importation/clearing"
+            element={
+              <Protected>
+                <Clearing />
               </Protected>
             }
           />
