@@ -31,9 +31,112 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Search, Package, Users, Undo2 } from "lucide-react";
+import { Search, Package, Users, Undo2, DollarSign } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { format } from "date-fns";
+import { DollarSign as Icon } from "lucide-react";
+import { AllocationDetailsDialog } from "@/src/components/banking/AllocationDetailsDialog";
+
+// Payment Dialog Component
+function PaymentDialog({ allocation, isOpen, onClose }) {
+  const { addPayment } = useAllocationStore();
+  const [paymentAmount, setPaymentAmount] = useState("");
+  const { toast } = useToast();
+
+  const handlePayment = () => {
+    const amount = Number.parseFloat(paymentAmount);
+    if (!amount || amount <= 0) {
+      toast({
+        title: "Invalid Amount",
+        description: "Please enter a valid payment amount",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const remainingAmount =
+      allocation.totalAmount - (allocation.amountPaid || 0);
+    if (amount > remainingAmount) {
+      toast({
+        title: "Invalid Amount",
+        description: "Payment amount cannot exceed the remaining balance",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    addPayment(allocation.id, amount);
+    toast({
+      title: "Success",
+      description: "Payment recorded successfully",
+    });
+    setPaymentAmount("");
+    onClose();
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Record Payment</DialogTitle>
+          <DialogDescription>
+            Record a payment for the allocation to {allocation?.employeeName}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Total Amount</Label>
+              <div className="font-medium">
+                ₦{(allocation?.totalAmount || 0).toLocaleString()}
+              </div>
+            </div>
+            <div>
+              <Label>Amount Paid</Label>
+              <div className="font-medium">
+                ₦{(allocation?.amountPaid || 0).toLocaleString()}
+              </div>
+            </div>
+            <div>
+              <Label>Remaining Balance</Label>
+              <div className="font-medium">
+                ₦
+                {(
+                  (allocation?.totalAmount || 0) - (allocation?.amountPaid || 0)
+                ).toLocaleString()}
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>Payment Amount *</Label>
+            <Input
+              type="number"
+              min="0"
+              step="0.01"
+              value={paymentAmount}
+              onChange={(e) => setPaymentAmount(e.target.value)}
+              placeholder="Enter payment amount"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button onClick={handlePayment}>Record Payment</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export default function AllocationPage() {
   const { containers, updateContainer } = useContainerStore();
@@ -51,7 +154,11 @@ export default function AllocationPage() {
   const [allocationType, setAllocationType] = useState("partial");
   const [selectedEmployeeId, setSelectedEmployeeId] = useState("");
   const [balesToAllocate, setBalesToAllocate] = useState("");
+  const [pricePerBale, setPricePerBale] = useState("");
   const [notes, setNotes] = useState("");
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const [showDetailsDialog, setShowDetailsDialog] = useState(false);
+  const [selectedAllocation, setSelectedAllocation] = useState(null);
 
   // Get available containers (arrived or pending status)
   const availableContainers = containers
@@ -100,6 +207,16 @@ export default function AllocationPage() {
       return;
     }
 
+    const price = Number.parseFloat(pricePerBale);
+    if (!price || price <= 0) {
+      toast({
+        title: "Validation Error",
+        description: "Please enter a valid price per bale",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const availableBales = selectedContainer.totalBales;
     if (balesCount > availableBales) {
       toast({
@@ -120,6 +237,7 @@ export default function AllocationPage() {
       employeeName: employee.name,
       balesAllocated: balesCount,
       allocationType: allocationType,
+      pricePerBale: Number.parseFloat(pricePerBale),
       notes: notes,
       allocatedBy: "current-user", // In real app, this would be the logged-in user
     });
@@ -385,6 +503,19 @@ export default function AllocationPage() {
                 </div>
 
                 {/* Notes */}
+                {/* Price per Bale */}
+                <div className="space-y-2">
+                  <Label>Price per Bale *</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={pricePerBale}
+                    onChange={(e) => setPricePerBale(e.target.value)}
+                    placeholder="Enter price per bale"
+                  />
+                </div>
+
                 <div className="space-y-2">
                   <Label>Notes</Label>
                   <Textarea
@@ -435,16 +566,20 @@ export default function AllocationPage() {
                   <TableHead>Container/BL Number</TableHead>
                   <TableHead>Employee Name</TableHead>
                   <TableHead>Bales Allocated</TableHead>
+                  <TableHead>Price/Bale</TableHead>
+                  <TableHead>Total Amount</TableHead>
+                  <TableHead>Amount Paid</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Notes</TableHead>
-                  <TableHead className="text-center">Action</TableHead>
+                  <TableHead className="text-center">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {recentAllocations.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={7}
+                      colSpan={11}
                       className="text-center py-8 text-muted-foreground"
                     >
                       No allocations found. Start allocating containers to see
@@ -453,7 +588,14 @@ export default function AllocationPage() {
                   </TableRow>
                 ) : (
                   recentAllocations.map((allocation) => (
-                    <TableRow key={allocation.id}>
+                    <TableRow
+                      key={allocation.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => {
+                        setSelectedAllocation(allocation);
+                        setShowDetailsDialog(true);
+                      }}
+                    >
                       <TableCell>
                         {format(
                           new Date(allocation.allocationDate),
@@ -468,6 +610,30 @@ export default function AllocationPage() {
                         {allocation.balesAllocated.toLocaleString()}
                       </TableCell>
                       <TableCell>
+                        ₦{allocation.pricePerBale?.toLocaleString()}
+                      </TableCell>
+                      <TableCell>
+                        ₦{(allocation.totalAmount || 0).toLocaleString()}
+                      </TableCell>
+                      <TableCell>
+                        ₦{(allocation.amountPaid || 0).toLocaleString()}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="outline"
+                          className={
+                            allocation.paymentStatus === "paid"
+                              ? "bg-green-100 text-green-800 border-green-200"
+                              : allocation.paymentStatus === "partial"
+                              ? "bg-yellow-100 text-yellow-800 border-yellow-200"
+                              : "bg-red-100 text-red-800 border-red-200"
+                          }
+                        >
+                          {allocation.paymentStatus?.charAt(0).toUpperCase() +
+                            allocation.paymentStatus?.slice(1)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
                         <Badge variant="outline">
                           {allocation.allocationType.charAt(0).toUpperCase() +
                             allocation.allocationType.slice(1)}
@@ -478,15 +644,29 @@ export default function AllocationPage() {
                           {allocation.notes || "-"}
                         </div>
                       </TableCell>
-                      <TableCell className="text-center">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleReverseAllocation(allocation.id)}
-                          className="text-destructive hover:text-destructive"
-                        >
-                          <Undo2 className="h-4 w-4" />
-                        </Button>
+                      <TableCell>
+                        <div className="flex justify-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedAllocation(allocation);
+                              setShowPaymentDialog(true);
+                            }}
+                          >
+                            <DollarSign className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              handleReverseAllocation(allocation.id)
+                            }
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Undo2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))
@@ -496,6 +676,30 @@ export default function AllocationPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Payment Dialog */}
+      {showPaymentDialog && selectedAllocation && (
+        <PaymentDialog
+          allocation={selectedAllocation}
+          isOpen={showPaymentDialog}
+          onClose={() => {
+            setShowPaymentDialog(false);
+            setSelectedAllocation(null);
+          }}
+        />
+      )}
+
+      {/* Details Dialog */}
+      {showDetailsDialog && selectedAllocation && (
+        <AllocationDetailsDialog
+          allocation={selectedAllocation}
+          isOpen={showDetailsDialog}
+          onClose={() => {
+            setShowDetailsDialog(false);
+            setSelectedAllocation(null);
+          }}
+        />
+      )}
     </div>
   );
 }

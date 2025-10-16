@@ -4,6 +4,7 @@ export const useAllocationStore = create(
   persist(
     (set, get) => ({
       allocations: [],
+      payments: [],
       employees: [
         { id: "1", name: "John Doe", currentStock: 1200 },
         { id: "2", name: "Jane Smith", currentStock: 800 },
@@ -17,6 +18,11 @@ export const useAllocationStore = create(
           id: globalThis.crypto.randomUUID(),
           allocationDate: new Date().toISOString(),
           status: "active",
+          pricePerBale: allocation.pricePerBale || 0,
+          totalAmount:
+            (allocation.pricePerBale || 0) * allocation.balesAllocated,
+          amountPaid: 0,
+          paymentStatus: "pending",
         };
 
         // Update employee stock
@@ -62,6 +68,87 @@ export const useAllocationStore = create(
 
       getActiveAllocations: () => {
         return get().allocations.filter((a) => a.status === "active");
+      },
+
+      addPayment: (
+        allocationId,
+        amount,
+        paymentDate = new Date().toISOString()
+      ) => {
+        const payment = {
+          id: globalThis.crypto.randomUUID(),
+          allocationId,
+          amount,
+          paymentDate,
+        };
+
+        set((state) => {
+          const updatedAllocations = state.allocations.map((allocation) => {
+            if (allocation.id === allocationId) {
+              const newAmountPaid = (allocation.amountPaid || 0) + amount;
+              const paymentStatus =
+                newAmountPaid >= allocation.totalAmount
+                  ? "paid"
+                  : newAmountPaid > 0
+                  ? "partial"
+                  : "pending";
+
+              return {
+                ...allocation,
+                amountPaid: newAmountPaid,
+                paymentStatus,
+              };
+            }
+            return allocation;
+          });
+
+          return {
+            payments: [...state.payments, payment],
+            allocations: updatedAllocations,
+          };
+        });
+      },
+
+      getAllocationPayments: (allocationId) => {
+        return get().payments.filter(
+          (payment) => payment.allocationId === allocationId
+        );
+      },
+
+      getAllocationWithDetails: (allocationId) => {
+        const allocation = get().allocations.find((a) => a.id === allocationId);
+        if (!allocation) return null;
+
+        const payments = get().getAllocationPayments(allocationId);
+        const employee = get().getEmployeeById(allocation.employeeId);
+
+        return {
+          ...allocation,
+          employee,
+          payments,
+          remainingAmount:
+            allocation.totalAmount - (allocation.amountPaid || 0),
+        };
+      },
+
+      getAllTransactions: () => {
+        const allocations = get().allocations;
+        const payments = get().payments;
+
+        return {
+          allocations: allocations.map((allocation) => ({
+            ...allocation,
+            employee: get().getEmployeeById(allocation.employeeId),
+            remainingAmount:
+              allocation.totalAmount - (allocation.amountPaid || 0),
+          })),
+          payments: payments.map((payment) => ({
+            ...payment,
+            allocation: get().allocations.find(
+              (a) => a.id === payment.allocationId
+            ),
+          })),
+        };
       },
     }),
     {
