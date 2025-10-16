@@ -194,10 +194,20 @@ export default function DollarTrackerPage() {
     doc.setFontSize(10);
     doc.text(`Bill of Lading: ${invoice.billOfLadingNumber}`, 14, 32);
     doc.text(`Supplier: ${invoice.supplierName}`, 14, 38);
-    doc.text(`Total Invoice Value: ${formatCurrency(invoice.totalInvoiceValueUSD)}`, 14, 44);
+    doc.text(
+      `Total Invoice Value: ${formatCurrency(invoice.totalInvoiceValueUSD)}`,
+      14,
+      44
+    );
     doc.text(`Total Paid: ${formatCurrency(invoice.totalPaidUSD)}`, 14, 50);
     doc.text(`Outstanding: ${formatCurrency(invoice.outstandingUSD)}`, 14, 56);
-    doc.text(`Average Exchange Rate: ₦${invoice.averageExchangeRate?.toFixed(2) || "0.00"}`, 14, 62);
+    doc.text(
+      `Average Exchange Rate: ₦${
+        invoice.averageExchangeRate?.toFixed(2) || "0.00"
+      }`,
+      14,
+      62
+    );
 
     // Add date generated
     doc.setFontSize(9);
@@ -207,14 +217,23 @@ export default function DollarTrackerPage() {
     // Create payment history table
     autoTable(doc, {
       startY: 80,
-      head: [["Date", "USD Amount", "Exchange Rate", "Naira Amount", "Method", "Reference"]],
+      head: [
+        [
+          "Date",
+          "USD Amount",
+          "Exchange Rate",
+          "Naira Amount",
+          "Method",
+          "Reference",
+        ],
+      ],
       body: payments.map((payment) => [
         format(new Date(payment.paymentDate), "dd/MM/yyyy"),
         formatCurrency(payment.usdAmountPaid),
         `₦${payment.exchangeRate}`,
         `₦${payment.nairaEquivalent.toLocaleString()}`,
         payment.paymentMethod.replace("_", " "),
-        payment.referenceNumber || "-"
+        payment.referenceNumber || "-",
       ]),
       styles: { fontSize: 9 },
       headStyles: { fillColor: [41, 128, 185] },
@@ -714,7 +733,7 @@ export default function DollarTrackerPage() {
               {/* Summary */}
               <div className="bg-muted/50 rounded-lg p-4">
                 <h4 className="font-medium mb-3">Payment Summary</h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
                   <div>
                     <div className="font-medium">Total Invoice</div>
                     <div>
@@ -724,6 +743,13 @@ export default function DollarTrackerPage() {
                   <div>
                     <div className="font-medium">Total Paid</div>
                     <div>{formatCurrency(selectedInvoice.totalPaidUSD)}</div>
+                  </div>
+                  <div>
+                    <div className="font-medium">Total Naira</div>
+                    <div>
+                      ₦
+                      {selectedInvoice.totalNairaSpent?.toLocaleString() || "0"}
+                    </div>
                   </div>
                   <div>
                     <div className="font-medium">Outstanding</div>
