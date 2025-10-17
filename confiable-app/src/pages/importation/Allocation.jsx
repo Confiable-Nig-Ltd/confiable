@@ -591,7 +591,9 @@ export default function AllocationPage() {
                     <TableRow
                       key={allocation.id}
                       className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => {
+                      onClick={(e) => {
+                        // Don't show details if clicking on action buttons
+                        if (e.target.closest(".action-button")) return;
                         setSelectedAllocation(allocation);
                         setShowDetailsDialog(true);
                       }}
@@ -649,7 +651,9 @@ export default function AllocationPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => {
+                            className="action-button"
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevent row click
                               setSelectedAllocation(allocation);
                               setShowPaymentDialog(true);
                             }}
@@ -659,10 +663,11 @@ export default function AllocationPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() =>
-                              handleReverseAllocation(allocation.id)
-                            }
-                            className="text-destructive hover:text-destructive"
+                            className="action-button text-destructive hover:text-destructive"
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevent row click
+                              handleReverseAllocation(allocation.id);
+                            }}
                           >
                             <Undo2 className="h-4 w-4" />
                           </Button>
