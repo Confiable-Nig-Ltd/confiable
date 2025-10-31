@@ -75,31 +75,44 @@ export const useAllocationStore = create(
         amount,
         paymentDate = new Date().toISOString()
       ) => {
+        // Find the allocation first to calculate bales
+        const allocation = get().allocations.find((a) => a.id === allocationId);
+        if (!allocation) return;
+
+        // Calculate bales paid for in this payment
+        const balesPaidFor = Math.floor(amount / allocation.pricePerBale);
+
         const payment = {
           id: globalThis.crypto.randomUUID(),
           allocationId,
           amount,
           paymentDate,
+          balesPaidFor, // Track bales paid for in this payment
         };
 
         set((state) => {
-          const updatedAllocations = state.allocations.map((allocation) => {
-            if (allocation.id === allocationId) {
-              const newAmountPaid = (allocation.amountPaid || 0) + amount;
+          const updatedAllocations = state.allocations.map((alloc) => {
+            if (alloc.id === allocationId) {
+              const newAmountPaid = (alloc.amountPaid || 0) + amount;
+              const totalBalesPaid = Math.floor(
+                newAmountPaid / alloc.pricePerBale
+              );
               const paymentStatus =
-                newAmountPaid >= allocation.totalAmount
+                newAmountPaid >= alloc.totalAmount
                   ? "paid"
                   : newAmountPaid > 0
                   ? "partial"
                   : "pending";
 
               return {
-                ...allocation,
+                ...alloc,
                 amountPaid: newAmountPaid,
+                balesPaid: totalBalesPaid, // Track total bales paid
+                balesRemaining: alloc.balesAllocated - totalBalesPaid, // Track remaining bales
                 paymentStatus,
               };
             }
-            return allocation;
+            return alloc;
           });
 
           return {

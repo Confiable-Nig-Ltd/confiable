@@ -1,7 +1,6 @@
-
 import React, { useMemo, useState } from "react";
 import { PDFDownloadLink, BlobProvider } from "@react-pdf/renderer";
-import RecordsPDFDocument from "./RecordsPDFDocument";
+import { RecordsPDF } from "./records-pdf";
 import { formatCurrencyDisplay, groupByDate } from "@/utils/currency";
 
 // ✅ Inline error boundary
@@ -154,9 +153,7 @@ const SavedRecordsModal = ({
                       <div>
                         Transport: {formatCurrencyDisplay(record.transport)}
                       </div>
-                      <div>
-                        Agency: {formatCurrencyDisplay(record.agency)}
-                      </div>
+                      <div>Agency: {formatCurrencyDisplay(record.agency)}</div>
                       <div>PAAR: {formatCurrencyDisplay(record.paar)}</div>
                       <div>Duty: {formatCurrencyDisplay(record.duty)}</div>
                     </div>
@@ -165,11 +162,15 @@ const SavedRecordsModal = ({
                     <div className="mt-3">
                       <h5 className="font-semibold">Payment History</h5>
                       {Object.keys(grouped).length === 0 ? (
-                        <p className="text-sm text-gray-500">No payments yet.</p>
+                        <p className="text-sm text-gray-500">
+                          No payments yet.
+                        </p>
                       ) : (
                         Object.entries(grouped).map(([date, payments]) => (
                           <div key={date} className="mt-2">
-                            <p className="font-semibold text-gray-700">{date}</p>
+                            <p className="font-semibold text-gray-700">
+                              {date}
+                            </p>
                             <ul className="ml-4 list-disc text-sm text-gray-600">
                               {payments.map((p) => (
                                 <li key={p.id}>
@@ -214,12 +215,14 @@ const SavedRecordsModal = ({
               {/* Download PDF */}
               <ErrorBoundary>
                 <PDFDownloadLink
-                  document={<RecordsPDFDocument records={filteredRecords} />}
-                  fileName="records-summary.pdf"
+                  document={<RecordsPDF records={filteredRecords} />}
+                  fileName={`clearing-records-${
+                    new Date().toISOString().split("T")[0]
+                  }.pdf`}
                 >
                   {({ loading }) => (
-                    <button className="bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-700">
-                      {loading ? "Preparing PDF..." : "Download PDF"}
+                    <button className="bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-700 disabled:opacity-50">
+                      {loading ? "Preparing Download..." : "Download Records"}
                     </button>
                   )}
                 </PDFDownloadLink>
@@ -227,7 +230,9 @@ const SavedRecordsModal = ({
 
               {/* Print PDF */}
               <ErrorBoundary>
-                <BlobProvider document={<RecordsPDFDocument records={filteredRecords} />}>
+                <BlobProvider
+                  document={<RecordsPDF records={filteredRecords} />}
+                >
                   {({ url, loading, error }) =>
                     loading ? (
                       <button className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm opacity-50 cursor-not-allowed">
