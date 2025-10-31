@@ -108,6 +108,11 @@ export function AllocationDetailsDialog({ allocation, isOpen, onClose }) {
                         Bales Allocated:{" "}
                         {details.balesAllocated?.toLocaleString()}
                         <br />
+                        Bales Paid For: {details.balesPaid?.toLocaleString()}
+                        <br />
+                        Bales Remaining:{" "}
+                        {details.balesRemaining?.toLocaleString()}
+                        <br />
                         Price per Bale: ₦
                         {details.pricePerBale?.toLocaleString()}
                       </div>
@@ -158,15 +163,16 @@ export function AllocationDetailsDialog({ allocation, isOpen, onClose }) {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="w-1/2">Date</TableHead>
-                        <TableHead className="w-1/2">Amount</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Amount</TableHead>
+                        <TableHead>Bales Paid For</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {details.payments?.length === 0 ? (
                         <TableRow>
                           <TableCell
-                            colSpan={2}
+                            colSpan={3}
                             className="text-center py-4 text-muted-foreground"
                           >
                             No payments recorded yet
@@ -183,6 +189,9 @@ export function AllocationDetailsDialog({ allocation, isOpen, onClose }) {
                             </TableCell>
                             <TableCell>
                               ₦{payment.amount?.toLocaleString()}
+                            </TableCell>
+                            <TableCell>
+                              {payment.balesPaidFor?.toLocaleString()} bales
                             </TableCell>
                           </TableRow>
                         ))
