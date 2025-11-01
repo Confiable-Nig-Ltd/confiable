@@ -125,6 +125,34 @@ const styles = StyleSheet.create({
 });
 
 export function RecordsPDF({ records }) {
+  const formatCurrency = (value) => {
+    // Handle empty or null values
+    if (value === undefined || value === null || value === "") return "#0";
+
+    // If the value already includes the Naira symbol, use it as is
+    if (String(value).includes("₦")) {
+      return String(value).replace("₦", "#");
+    }
+
+    // Convert to string and remove any non-numeric characters
+    const numericValue = String(value).replace(/[^0-9]/g, "");
+    return `#${numericValue}`;
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -139,7 +167,7 @@ export function RecordsPDF({ records }) {
             <View style={styles.recordHeader}>
               <Text style={styles.consigneeName}>{record.consignee}</Text>
               <Text style={styles.totalAmount}>
-                ₦{record.amount?.toLocaleString() || "0"}
+                {formatCurrency(record.amount)}
               </Text>
             </View>
 
@@ -147,18 +175,18 @@ export function RecordsPDF({ records }) {
             <View style={styles.detailsSection}>
               <View style={styles.detailRow}>
                 <Text style={styles.detailLabel}>Item:</Text>
-                <Text style={styles.detailValue}>{record.item || "N/A"}</Text>
+                <Text style={styles.detailValue}>{record.item || ""}</Text>
               </View>
               <View style={styles.detailRow}>
                 <Text style={styles.detailLabel}>B/L:</Text>
-                <Text style={styles.detailValue}>{record.bl || "N/A"}</Text>
+                <Text style={styles.detailValue}>
+                  {record.billOfLading || ""}
+                </Text>
               </View>
               <View style={styles.detailRow}>
                 <Text style={styles.detailLabel}>Created:</Text>
                 <Text style={styles.detailValue}>
-                  {record.date
-                    ? new Date(record.date).toLocaleDateString()
-                    : "Invalid Date"}
+                  {formatDate(record.createdAt)}
                 </Text>
               </View>
             </View>
@@ -168,37 +196,37 @@ export function RecordsPDF({ records }) {
               <View style={styles.costItem}>
                 <Text style={styles.costLabel}>Terminal:</Text>
                 <Text style={styles.costValue}>
-                  ₦{record.terminal?.toLocaleString() || "0"}
+                  {formatCurrency(record.terminal)}
                 </Text>
               </View>
               <View style={styles.costItem}>
                 <Text style={styles.costLabel}>Shipping:</Text>
                 <Text style={styles.costValue}>
-                  ₦{record.shipping?.toLocaleString() || "0"}
+                  {formatCurrency(record.shipping)}
                 </Text>
               </View>
               <View style={styles.costItem}>
                 <Text style={styles.costLabel}>Transport:</Text>
                 <Text style={styles.costValue}>
-                  ₦{record.transport?.toLocaleString() || "0"}
+                  {formatCurrency(record.transport)}
                 </Text>
               </View>
               <View style={styles.costItem}>
                 <Text style={styles.costLabel}>Agency:</Text>
                 <Text style={styles.costValue}>
-                  ₦{record.agency?.toLocaleString() || "0"}
+                  {formatCurrency(record.agency)}
                 </Text>
               </View>
               <View style={styles.costItem}>
                 <Text style={styles.costLabel}>PAAR:</Text>
                 <Text style={styles.costValue}>
-                  ₦{record.paar?.toLocaleString() || "0"}
+                  {formatCurrency(record.paar)}
                 </Text>
               </View>
               <View style={styles.costItem}>
                 <Text style={styles.costLabel}>Duty:</Text>
                 <Text style={styles.costValue}>
-                  ₦{record.duty?.toLocaleString() || "0"}
+                  {formatCurrency(record.duty)}
                 </Text>
               </View>
             </View>
@@ -209,8 +237,8 @@ export function RecordsPDF({ records }) {
               {record.payments && record.payments.length > 0 ? (
                 record.payments.map((payment, pIndex) => (
                   <View key={pIndex} style={styles.paymentRow}>
-                    <Text>{new Date(payment.date).toLocaleDateString()}</Text>
-                    <Text>₦{payment.amount.toLocaleString()}</Text>
+                    <Text>{payment.date}</Text>
+                    <Text>{formatCurrency(payment.amount)}</Text>
                   </View>
                 ))
               ) : (
