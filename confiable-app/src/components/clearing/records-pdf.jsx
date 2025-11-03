@@ -125,6 +125,9 @@ const styles = StyleSheet.create({
 });
 
 export function RecordsPDF({ records }) {
+  // Debug log to check incoming data
+  console.log("Generating PDF with records:", JSON.stringify(records, null, 2));
+
   const formatCurrency = (value) => {
     // Handle empty or null values
     if (value === undefined || value === null || value === "") return "#0";
@@ -143,13 +146,17 @@ export function RecordsPDF({ records }) {
     if (!dateString) return "";
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString("en-GB", {
+      if (isNaN(date.getTime())) {
+        return "Invalid Date";
+      }
+      const formatted = date.toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
       });
+      return formatted || "Invalid Date Format";
     } catch {
-      return dateString;
+      return "Date Error";
     }
   };
 
